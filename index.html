@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOK-MY-HSRP - Light Theme</title>
+    <title>HSRP Number Plate - Road Safety Information</title>
     
-
 <script src="https://cdn.tailwindcss.com"></script>
     
-
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -36,7 +34,7 @@
 
         const { useState } = React;
         
-        // --- VIBRANT COLORS FROM SCREENSHOT ---
+        // --- VIBRANT COLORS ---
         const PRIMARY_BLUE = 'bg-blue-800'; // Deep Vibrant Blue
         const PRIMARY_TEXT = 'text-white'; 
         const ACCENT_YELLOW = 'bg-yellow-400'; // Bright Saffron/Yellow
@@ -44,7 +42,7 @@
         // --- NEW OFF-WHITE BACKGROUND COLOR ---
         const CARD_BG_LIGHT = 'bg-gray-100'; // Off-white background for inner steps
 
-        const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = PRIMARY_BLUE, textColorClass = 'text-white' }) => {
+        const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = PRIMARY_BLUE, textColorClass = 'text-white', type = 'button' }) => {
             let baseClasses = "rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 ";
             
             if (variant === 'outline') {
@@ -66,6 +64,7 @@
                     onClick={onClick}
                     className={`${baseClasses} p-2.5 ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={disabled}
+                    type={type}
                 >
                     {children}
                 </button>
@@ -73,21 +72,36 @@
         };
 
 
-        const Input = ({ placeholder, className = '', type = 'text', value, onChange, name }) => (
-            <input
-                type={type}
-                name={name} 
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}
-                // Standard input on light card background
-                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-800 focus:ring-blue-800 focus:ring-1 transition-colors duration-200 uppercase-input bg-white text-gray-800 ${className}`}
-            />
-        );
+        const Input = ({ placeholder, className = '', type = 'text', value, onChange, name, rows = 1 }) => {
+            if (rows > 1) {
+                return (
+                    <textarea
+                        name={name} 
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={onChange}
+                        rows={rows}
+                        className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-800 focus:ring-blue-800 focus:ring-1 transition-colors duration-200 bg-white text-gray-800 ${className}`}
+                    ></textarea>
+                );
+            }
+            return (
+                <input
+                    type={type}
+                    name={name} 
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                    // Apply uppercase only to vehicle-related inputs, not to contact form inputs like name/subject
+                    className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-800 focus:ring-blue-800 focus:ring-1 transition-colors duration-200 bg-white text-gray-800 ${
+                        (name === 'regNo' || name === 'chassisNo' || name === 'engineNo') ? 'uppercase-input' : ''
+                    } ${className}`}
+                />
+            );
+        };
         
         const FileInput = ({ label, onChange, fileName }) => (
             <div className="space-y-2">
-                {/* Changed label text color back to dark for light background */}
                 <label className="block text-sm font-medium text-gray-700">{label}</label> 
                 <div className="relative border border-gray-300 bg-white rounded-xl p-3 cursor-pointer hover:border-blue-800 transition-colors duration-200">
                     <input
@@ -100,7 +114,6 @@
                         <span className="truncate">
                             {fileName || 'Click to upload screenshot...'}
                         </span>
-                        {/* Changed icon color back to blue */}
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-800"> 
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="17 8 12 3 7 8"></polyline>
@@ -135,7 +148,7 @@
             </div>
         );
 
-        // --- Data Definitions (Colors updated for Screenshot Theme) ---
+        // --- Data Definitions ---
 
         const INDIAN_STATES_AND_UTS = [
             "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
@@ -148,64 +161,50 @@
             "Lakshadweep", "Delhi", "Puducherry"
         ];
         
-        // HSRP_OPTIONS: Structured and colored with Deep Blue and Bright Yellow
+        // HSRP_OPTIONS: Updated action text based on user request.
         const HSRP_OPTIONS = [
-            // 1. HSRP with Colour Sticker (Bright Yellow)
+            // 1. HSRP with Colour Sticker (KEEP 'Book')
             { 
                 title: 'HSRP with Colour Sticker', 
-                description: 'Apply for fresh HSRP and mandatory sticker for all vehicle types.',
+                description: 'Fresh HSRP and mandatory sticker for all vehicle types.',
                 action: 'Book →', 
                 color: ACCENT_YELLOW, 
                 className: 'lg:row-span-2 lg:h-full', 
-                navAction: 'booking'
             },
-            // 2. Replacement/Transfer (Deep Blue)
+            // 2. Replacement/Transfer (CHANGE to 'Click Here')
             { 
                 title: 'Replacement/Retain/Transfer', 
-                description: 'Book plates for damaged or transfer cases.', 
-                action: 'Book →', 
+                description: 'Plates for damaged or transfer cases.', 
+                action: 'Click Here →', 
                 color: PRIMARY_BLUE, 
-                navAction: 'booking'
             },
-            // 3. Plate for Electric Vehicle (Deep Blue)
+            // 3. Plate for Electric Vehicle (CHANGE to 'Click Here')
             { 
                 title: 'Plate for Electric Vehicle', 
-                description: 'Book the unique green plate for electric vehicles.', 
-                action: 'Book EV Plate →', 
+                description: 'The unique green plate for electric vehicles.', 
+                action: 'Click Here →', 
                 color: PRIMARY_BLUE, 
-                navAction: 'booking'
             }, 
-            // 4. Track Your Order (Deep Blue)
-            { 
-                title: 'Track Your Order', 
-                description: 'Check the current status of your existing HSRP application.', 
-                action: 'Track →', 
-                color: PRIMARY_BLUE, 
-                navAction: 'tracking' 
-            },
-            // 5. Only Colour Sticker (Bright Yellow)
+            // 4. Only Colour Sticker (CHANGE to 'Click Here')
             { 
                 title: 'Only Colour Sticker', 
-                description: 'Apply only for the mandatory colour-coded fuel sticker.', 
-                action: 'Book →', 
+                description: 'Only for the mandatory colour-coded fuel sticker.', 
+                action: 'Click Here →', 
                 color: ACCENT_YELLOW, 
-                navAction: 'booking'
             },
-            // 6. Plate for Tractor & Trailer (Deep Blue)
+            // 5. Plate for Tractor & Trailer (CHANGE to 'Click Here')
             { 
                 title: 'Plate for Tractor & Trailer', 
-                description: 'Apply for HSRP for Tractor or Trailer vehicles.', 
-                action: 'Book →', 
+                description: 'HSRP for Tractor or Trailer vehicles.', 
+                action: 'Click Here →', 
                 color: PRIMARY_BLUE, 
-                navAction: 'booking'
             },
-            // 7. Grievance Redressal (Bright Yellow)
+            // 6. Grievance Redressal (KEEP 'Enquiry')
             { 
                 title: 'Grievance Redressal', 
                 description: 'Submit an enquiry or file a complaint regarding an order.', 
                 action: 'Enquiry →', 
                 color: ACCENT_YELLOW, 
-                navAction: 'booking' 
             }
         ];
 
@@ -228,17 +227,40 @@
               box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.1), 0 4px 6px -2px rgba(30, 58, 138, 0.05); /* blue-800 shadow */
             }
             .nav-link:hover {
-                color: #fca5a5; /* Reddish hover effect for contrast */
+                color: #fcd34d; /* Yellow hover effect for contrast */
+            }
+            .nav-link.active {
+                border-bottom: 2px solid #fcd34d; /* Yellow underline for active link */
             }
           `}} />
+        );
+
+        // Success Message Component (Replaces alert())
+        const SuccessMessage = ({ message, onClose }) => (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full text-center border-t-4 border-green-500 animate-fadeIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-green-500 mx-auto mb-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Success!</h3>
+                    <p className="text-gray-600 mb-4">{message}</p>
+                    <Button 
+                        onClick={onClose} 
+                        colorClass="bg-green-500" 
+                        textColorClass="text-white"
+                        className="p-2 w-full"
+                    >
+                        Close
+                    </Button>
+                </div>
+            </div>
         );
 
 
         function App() {
             const [step, setStep] = useState(0); 
-            const [trackingId, setTrackingId] = useState('');
-            const [trackResult, setTrackResult] = useState(null);
             const [screenshotFile, setScreenshotFile] = useState(null); 
+            const [submitMessage, setSubmitMessage] = useState(null); // For custom success message
             
             const [formData, setFormData] = useState({
                 regNo: '', 
@@ -251,38 +273,55 @@
                 address: '', 
                 state: 'Delhi',
             });
+            
+            const [contactFormData, setContactFormData] = useState({
+                name: '',
+                email: '',
+                subject: '',
+                message: ''
+            });
 
             const handleInputChange = (e) => {
-                const { name, value, type } = e.target;
+                const { name, value } = e.target;
                 
                 let newValue = value;
 
-                // Force uppercase for non-email/non-tel/non-select fields
-                if (type !== 'email' && type !== 'tel' && e.target.tagName.toLowerCase() !== 'select') {
+                // Force uppercase for specific fields
+                if (name === 'regNo' || name === 'chassisNo' || name === 'engineNo') {
                     newValue = value.toUpperCase();
                 }
 
                 setFormData(prev => ({ ...prev, [name]: newValue }));
+            };
+
+            const handleContactInputChange = (e) => {
+                const { name, value } = e.target;
+                setContactFormData(prev => ({ ...prev, [name]: value }));
             };
             
             const handleNext = () => setStep(step + 1);
             const handlePrev = () => setStep(step - 1);
 
             const handleOptionClick = (item) => {
-                if (item.navAction === 'tracking') { 
-                    setStep(6);
-                } else {
-                    setStep(1);
-                    setScreenshotFile(null);
-                }
+                // All options now go to booking step 1
+                setStep(1);
+                setScreenshotFile(null);
             };
 
-            const handleTrackOrder = () => {
-                if (trackingId.trim().toUpperCase() === 'HSRP12003875X') {
-                    setTrackResult({ status: 'Booked', date: '2025-10-15', eta: '2025-11-01', message: 'Your order is confirmed and plates are in manufacturing.' });
-                } else if (trackingId.trim()) {
-                    setTrackResult({ status: 'Invalid', message: 'Order ID not found. Please check your tracking number.' });
-                }
+            const handleContactSubmit = (e) => {
+                e.preventDefault();
+                console.log('Contact Form Submitted:', contactFormData);
+                
+                // Set custom success message
+                setSubmitMessage('आपका संदेश सफलतापूर्वक भेज दिया गया है! हम जल्द ही आपसे संपर्क करेंगे। (Your message has been sent successfully! We will get back to you shortly.)');
+                
+                setContactFormData({ name: '', email: '', subject: '', message: '' }); // Clear form
+                
+                // Auto-clear message and navigate home after a delay (1.5 seconds)
+                setTimeout(() => {
+                    setSubmitMessage(null);
+                    setStep(0); // Navigate back to home after successful submission
+                }, 1500);
             };
             
             const handleFileChange = (e) => {
@@ -301,16 +340,20 @@
                 }
             };
 
-            const progressPercent = (step / 3) * 100;
+            // Progress bar is only shown during the 3 main booking steps
+            const isBookingStep = step >= 1 && step <= 3;
+            
 
             return (
                 <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 sm:p-6 font-sans text-gray-800">
                 <GlobalStyles />
                 
-                {/* Header (Light Theme Style) */}
+                {submitMessage && <SuccessMessage message={submitMessage} onClose={() => setSubmitMessage(null)} />}
+
+                {/* Header (Light Theme Style) - UPDATED TITLE HERE */}
                 <header className="w-full flex flex-col items-center mb-0 max-w-6xl">
                     <h1 className="text-4xl font-extrabold text-blue-800 tracking-wider mb-2">
-                    BOOK-MY-HSRP
+                    HSRP NUMBER PLATE
                     </h1>
                     {/* Tricolour Divider - Bright Yellow color used */}
                     <div className="flex w-32 justify-center gap-1">
@@ -325,27 +368,23 @@
                     <div className="max-w-6xl mx-auto flex justify-center sm:justify-start">
                     <ul className="flex flex-wrap text-white text-sm sm:text-base font-semibold">
                         {/* Home */}
-                        <li className="p-3 cursor-pointer nav-link hover:text-yellow-400" onClick={() => setStep(0)}>
+                        <li className={`p-3 cursor-pointer nav-link ${step === 0 ? 'active' : 'hover:text-yellow-400'}`} onClick={() => setStep(0)}>
                         Home
                         </li>
-                        {/* About (Placeholder) */}
-                        <li className="p-3 cursor-pointer nav-link hover:text-yellow-400">
-                        Corporate Profile
+                        {/* About Us - NEW LINK */}
+                        <li className={`p-3 cursor-pointer nav-link ${step === 6 ? 'active' : 'hover:text-yellow-400'}`} onClick={() => setStep(6)}>
+                        About Us
                         </li>
-                        {/* Contact (Placeholder) */}
-                        <li className="p-3 cursor-pointer nav-link hover:text-yellow-400">
+                        {/* Contact */}
+                        <li className={`p-3 cursor-pointer nav-link ${step === 7 ? 'active' : 'hover:text-yellow-400'}`} onClick={() => setStep(7)}>
                         Contact Us
-                        </li>
-                        {/* Track Order - Highlighted in Yellow */}
-                        <li className="p-3 cursor-pointer nav-link text-yellow-400 font-bold" onClick={() => setStep(6)}> 
-                        Track Order
                         </li>
                     </ul>
                     </div>
                 </nav>
 
                 {/* Progress Bar (Visible during the 3-step booking process) */}
-                {(step >= 1 && step <= 3) && ( 
+                {isBookingStep && ( 
                     <div className="w-full max-w-lg mb-6">
                     <div className="text-sm font-medium text-gray-600 mb-1 flex justify-between">
                         <span>Step {step} of 3</span> 
@@ -362,56 +401,243 @@
 
                 {/* --- Step 0: Homepage/Options (Vibrant colors on light theme) --- */}
                 {step === 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl animate-fadeIn">
-                    {HSRP_OPTIONS.map((item, i) => {
-                        const isYellow = item.color.includes('yellow');
-                        const cardBgColor = item.color; // bg-yellow-400 or bg-blue-800
+                    <div className="w-full max-w-6xl animate-fadeIn">
                         
-                        const cardTextColor = isYellow ? ACCENT_TEXT : PRIMARY_TEXT; // Dark text on Yellow, White text on Blue
-                        
-                        // Button styles: Yellow cards have Blue buttons, Blue cards have Yellow buttons
-                        const buttonBgColor = isYellow ? PRIMARY_BLUE : ACCENT_YELLOW;
-                        const buttonTextColor = isYellow ? PRIMARY_TEXT : ACCENT_TEXT;
+                        {/* --- HSRP Options Grid --- */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-12">
+                            {HSRP_OPTIONS.map((item, i) => {
+                                const isYellow = item.color.includes('yellow');
+                                const cardBgColor = item.color; // bg-yellow-400 or bg-blue-800
+                                
+                                const cardTextColor = isYellow ? ACCENT_TEXT : PRIMARY_TEXT; // Dark text on Yellow, White text on Blue
+                                
+                                // Button styles: Yellow cards have Blue buttons, Blue cards have Yellow buttons
+                                const buttonBgColor = isYellow ? PRIMARY_BLUE : ACCENT_YELLOW;
+                                const buttonTextColor = isYellow ? PRIMARY_TEXT : ACCENT_TEXT;
 
-                        return (
-                            <div key={i} className={`${item.className || ''}`}>
-                            {/* Card component only defines structure, color is passed via className */}
-                            <Card 
-                                className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor} ${cardTextColor}`}
-                            >
-                            <CardContent className="flex flex-col justify-between h-full space-y-4">
-                                
-                                <div className={`space-y-3 mb-4 flex flex-col items-center`}>
-                                    {/* Icon - Simplified for light theme contrast */}
-                                    <div
-                                        className={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg ${isYellow ? PRIMARY_BLUE : ACCENT_YELLOW} ${isYellow ? PRIMARY_TEXT : ACCENT_TEXT}`}
+                                return (
+                                    <div key={i} className={`${item.className || ''}`}>
+                                    {/* Card component only defines structure, color is passed via className */}
+                                    <Card 
+                                        className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor} ${cardTextColor}`}
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                                            <line x1="12" y1="16" x2="12" y2="16"></line>
-                                        </svg>
+                                    <CardContent className="flex flex-col justify-between h-full space-y-4">
+                                        
+                                        <div className={`space-y-3 mb-4 flex flex-col items-center`}>
+                                            {/* Icon - Simplified for light theme contrast */}
+                                            <div
+                                                className={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg ${isYellow ? PRIMARY_BLUE : ACCENT_YELLOW} ${isYellow ? PRIMARY_TEXT : ACCENT_TEXT}`}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                                    <line x1="12" y1="16" x2="12" y2="16"></line>
+                                                </svg>
+                                            </div>
+                                            <h2 className="text-xl font-bold leading-snug">
+                                                {item.title}
+                                            </h2 >
+                                            <p className="text-sm font-medium opacity-90">{item.description}</p>
+                                        </div>
+                                        
+                                        {/* Button with Inverted Colors */}
+                                        <Button 
+                                            className={`w-full p-3 text-lg tracking-wider font-semibold`}
+                                            onClick={() => handleOptionClick(item)} 
+                                            colorClass={buttonBgColor} 
+                                            textColorClass={buttonTextColor}
+                                        >
+                                            {item.action}
+                                        </Button>
+                                    </CardContent>
+                                    </Card>
                                     </div>
-                                    <h2 className="text-xl font-bold leading-snug">
-                                        {item.title}
-                                    </h2 >
-                                    <p className="text-sm font-medium opacity-90">{item.description}</p>
-                                </div>
-                                
-                                {/* Button with Inverted Colors */}
-                                <Button 
-                                    className={`w-full p-3 text-lg tracking-wider font-semibold`}
-                                    onClick={() => handleOptionClick(item)} 
-                                    colorClass={buttonBgColor} 
-                                    textColorClass={buttonTextColor}
-                                >
-                                    {item.action}
-                                </Button>
-                            </CardContent>
+                                );
+                            })}
+                        </div>
+                        
+                        {/* --- Article Content: Road and Transport Safety (Now on Home Page) --- */}
+                        <div className="w-full max-w-4xl mx-auto">
+                            <Card className={`p-4 custom-shadow ${CARD_BG_LIGHT} text-gray-800 border-t-8 border-yellow-400`}>
+                                <CardContent>
+                                    {/* Title of the Essay */}
+                                    <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">
+                                    Road and Transport Safety: The Digital Future and HSR Plate Revolutionary Role
+                                    </h2>
+                                    
+                                    {/* I. Introduction: The Imperative for Digital Transformation in Road Safety */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            I. Introduction: The Imperative for Digital Transformation in Road Safety
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            Road safety remains a critical global challenge, exacting a devastating human and economic toll. Every year, millions of lives are affected by traffic accidents, with low and middle-income countries disproportionately bearing the burden. In this context, the <span className="font-bold">digital revolution</span> offers a powerful antidote, transforming traditional, reactive policing methods into proactive, data-driven governance.
+                                        </p>
+                                        <p className="text-gray-700">
+                                            At the heart of this transformation is the concept of a smart, interconnected transport ecosystem. Within this framework, the <span className="font-bold">High-Security Registration Plate (HSRP)</span> emerges not merely as a physical number plate but as a fundamental digital identifier—the cryptographic key to a vehicle's identity. This article explores the High-Security Registration Plate’s revolutionary role in India's journey toward road safety and smart transport governance, analyzing how its mandated implementation is setting the stage for a digitally grounded and significantly safer future.
+                                        </p>
+                                    </div>
+
+                                    {/* II. The Road Safety Crisis: A Case Study on India */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            II. The Road Safety Crisis: A Case Study on India
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            India, with its vast network of roads and rapidly increasing vehicular density, presents one of the most complex and critical case studies in global road safety. Despite concerted efforts, the nation continues to struggle with high fatality rates, necessitating urgent and systemic changes.
+                                        </p>
+
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">A. The Statistics and Socio-Economic Impact</h4>
+                                        <p className="text-gray-700">
+                                            Official reports consistently highlight the gravity of the situation. India accounts for a staggering number of global road crash fatalities. This crisis is fueled by a confluence of factors: poor driver behavior, non-adherence to traffic rules, inadequate road engineering, and, critically, the lack of robust vehicle identity and tracking systems. The economic cost of road crashes in India is astronomical, often estimated to be several percentage points of the Gross Domestic Product (GDP). Beyond the monetary loss, the social impact, measured in lost productivity, medical costs, and psychological trauma, is incalculable.
+                                        </p>
+
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">B. The Challenge of Anonymous Accidents and Crime</h4>
+                                        <p className="text-gray-700">
+                                            Before the widespread adoption of HSRP, a significant hurdle in law enforcement was the anonymity afforded by easily tampered or fake number plates. <span className="font-bold">Hit-and-Run Cases:</span> Vehicles involved in hit-and-run incidents often had missing or obfuscated registration plates, rendering investigation nearly impossible. <span className="font-bold">Vehicle Theft:</span> Stolen vehicles were frequently re-registered or fitted with counterfeit plates, allowing them to operate undetected. <span className="font-bold">Criminal Activity:</span> Vehicle anonymity was exploited for serious criminal and even terrorist activities, where tracking the origin and movement of the vehicle was paramount. This chaotic environment necessitated a single, tamper-proof, and universally verifiable identification standard.
+                                        </p>
+                                    </div>
+
+                                    {/* III. The High-Security Registration Plate (HSRP): A Digital Identity Pillar */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            III. The High-Security Registration Plate (HSRP): A Digital Identity Pillar
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            The HSRP is a pivotal technological solution mandated by the Ministry of Road Transport and Highways (MoRTH) under the Central Motor Vehicles Rules (CMVR), 1989. It is designed to be the physical embodiment of a secure digital identity for every vehicle.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">A. Core Security and Digital Features</h4>
+                                        {/* FIX: Moved <ul> out of <p> to fix DOM nesting error - Confirmed Fixed */}
+                                        <p className="text-gray-700">
+                                            The HSRP is fundamentally different from the older aluminum or plastic plates. Its security features make it nearly impossible to counterfeit or tamper with:
+                                        </p>
+                                        <ul className="list-disc list-inside ml-4 mt-2 space-y-1 text-gray-700"> 
+                                            <li><span className="font-bold">Non-Removable Snap Lock:</span> The plates are affixed with two non-reusable, high-security 'snap lock' fasteners. Any attempt to remove the plate permanently damages the fastener, signaling tampering.</li>
+                                            <li><span className="font-bold">Chromium-Based Hologram:</span> A unique Ashoka Chakra hologram is hot-stamped onto the plate. This is an authentication mark that cannot be removed or duplicated easily.</li>
+                                            <li><span className="font-bold">Retro-Reflectivity:</span> The plate uses high-grade retro-reflective sheeting, ensuring high visibility at night and facilitating clear photography by speed cameras and Automated Number Plate Recognition (ANPR) systems, thus aiding digital surveillance.</li>
+                                            <li><span className="font-bold">Laser-Etched Permanent Identification Mark (PIN):</span> Below the Ashoka Chakra, a permanent, non-removable laser-etched code containing the vehicle’s manufacturing details and HSRP vendor is present. This acts as a secondary layer of physical-digital validation.</li>
+                                        </ul>
+
+
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">B. HSRP as a Data Foundation</h4>
+                                        <p className="text-gray-700">
+                                            The true revolutionary role of the HSRP lies in its linkage to the national digital ecosystem. Each HSRP number is uniquely registered in a centralized national database—<span className="font-bold">Vahan</span>. <span className="font-bold">Vahan Integration:</span> The Vahan portal, managed by the National Informatics Centre (NIC), serves as the single source of truth for all vehicle registration and transport data across India. When an HSRP is issued, its unique number is instantly linked to the vehicle's Chassis Number, Engine Number, and Owner Details. <span className="font-bold">Tamper-Proof Data Link:</span> This creates a secure, verifiable data connection between the physical plate and the digital record. The integrity of the HSRP ensures the integrity of the Vahan data, eliminating fraud at the source of identity.
+                                        </p>
+                                    </div>
+
+                                    {/* IV. HSRP in Action: Digital Transformation in India's Governance */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            IV. HSRP in Action: Digital Transformation in India's Governance
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            The nationwide rollout of HSRP, particularly the recent drive to mandate plates for older vehicles and the transition to online booking, serves as a powerful case study in implementing large-scale digital governance for public safety.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">A. E-Governance and Centralized Data</h4>
+                                        <p className="text-gray-700">
+                                            The HSRP system has enabled unprecedented centralization of vehicular data, a core requirement for a modern, digital transportation network: <span className="font-bold">Standardization:</span> It has enforced a uniform standard for registration plates across all 36 States and Union Territories, eliminating regional variations that previously complicated interstate enforcement. <span className="font-bold">Real-Time Tracking:</span> Law enforcement agencies can now run instantaneous checks on any HSRP number against the Vahan database to verify the vehicle's provenance, tax status, fitness, and insurance coverage. This real-time validation is crucial for preventing the use of stolen vehicles. <span className="font-bold">Elimination of Paperwork:</span> The system facilitates the issuance of <span className="font-bold">colour-coded stickers</span> (third registration plates) for fuel type identification (e.g., green for electric, blue for petrol/CNG), which aids visual identification and complements digital enforcement efforts without relying solely on physical documents.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">B. Automated Enforcement and Traffic Management</h4>
+                                        <p className="text-gray-700">
+                                            The high visibility, standardized font, and uniform placement of the HSRP are tailor-made for <span className="font-bold">Automated Number Plate Recognition (ANPR)</span> technology. <span className="font-bold">AI-Powered Surveillance:</span> ANPR cameras installed on smart poles and intersections can reliably read HSRPs with high accuracy, even at high speeds and low visibility. This system is the backbone for smart traffic management and automated fine generation. <span className="font-bold">e-Challans:</span> The seamless integration of ANPR data with the Vahan database allows for instant generation and dispatch of e-Challans (electronic tickets) for violations like over-speeding, red-light jumping, and incorrect parking. This removes human discretion, increases accountability, and ensures a high rate of compliance and collection. <span className="font-bold">Deterrence:</span> The knowledge that every vehicle can be digitally tracked and fined acts as a significant deterrent, forcing drivers to adhere to traffic laws, which is the most fundamental component of road safety.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">C. Specific Impact on Crime and Public Security</h4>
+                                        <p className="text-gray-700">
+                                            The implementation of HSRP has provided a critical tool for fighting crime: <span className="font-bold">Stolen Vehicle Recovery:</span> Once a vehicle is reported stolen, its HSRP number is flagged in the Vahan database. Any ANPR camera capture instantly alerts authorities, leading to higher recovery rates. <span className="font-bold">Public Security and Counter-Terrorism:</span> In the context of national security, the system provides a robust mechanism to track vehicles used in suspicious activities. The tamper-proof nature ensures that even if a criminal attempts to change the plate, the underlying chassis and engine number linkage, combined with the laser PIN, provides irrefutable evidence for identification.
+                                        </p>
+                                    </div>
+
+                                    {/* V. Challenges and Implementation Roadblocks */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            V. Challenges and Implementation Roadblocks
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            Despite its clear benefits, the transition to a fully HSRP-compliant ecosystem in India has faced initial challenges.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">A. Supply Chain and Unauthorized Agents</h4>
+                                        <p className="text-gray-700">
+                                            The massive scale of the rollout led to initial bottlenecks in the supply chain, with authorized vendors struggling to meet demand. This delay, coupled with public unawareness, unfortunately, led to the emergence of unauthorized vendors selling non-compliant or counterfeit plates, temporarily undermining the very security the system was meant to provide. State governments had to launch extensive public awareness campaigns and regulatory crackdowns to ensure fitment only through authorized dealerships or approved centers.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">B. The Legacy Vehicle Challenge</h4>
+                                        <p className="text-gray-700">
+                                            The most significant challenge was the sheer volume of vehicles registered before the HSRP mandate. Retrofitting these older vehicles required massive logistical coordination, a streamlined online booking process (as seen in states like Delhi and UP), and strict enforcement deadlines to push compliance.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">C. Data Quality and Interoperability</h4>
+                                        <p className="text-gray-700">
+                                            The efficacy of the HSRP is contingent upon the accuracy of the Vahan database. Any inaccuracies in the original registration details (name, address, engine/chassis number) can compromise the digital integrity of the HSRP linkage. Continuous data cleaning and validation across various Regional Transport Offices (RTOs) remains an ongoing effort to ensure 100% data fidelity.
+                                        </p>
+                                    </div>
+                                    
+                                    {/* VI. Beyond HSRP: Synergies in the Future Digital Ecosystem */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            VI. Beyond HSRP: Synergies in the Future Digital Ecosystem
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            The HSRP is the foundational layer upon which India is building a comprehensive <span className="font-bold">Intelligent Transport System (ITS)</span>. Its true value will be realized through its seamless synergy with other digital initiatives.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">A. FASTag and Automated Tolling Linkage</h4>
+                                        <p className="text-gray-700">
+                                            The <span className="font-bold">FASTag</span> system, which uses Radio Frequency Identification (RFID) technology for electronic toll collection, is physically mounted on the windshield and is often digitally linked to the vehicle's HSRP/Registration Number. This linkage creates a second, technologically distinct, and verifiable digital identifier. <span className="font-bold">Integrated Tracking:</span> This duality allows authorities to track a vehicle's movements via two separate digital systems (ANPR reading the HSRP and RFID readers reading the FASTag), cross-validating location and time data for better surveillance and logistics.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">B. Vehicle Health and Environmental Compliance</h4>
+                                        <p className="text-gray-700">
+                                            In the near future, the HSRP-linked Vahan data will be the universal validator for other crucial compliance certificates: <span className="font-bold">Pollution Under Control (PUC):</span> Automated systems will instantly verify the vehicle's PUC status. A non-compliant vehicle detected via HSRP/ANPR would instantly trigger a fine, irrespective of a physical check. <span className="font-bold">Insurance Verification:</span> Similarly, the system can confirm if the vehicle has valid third-party insurance, promoting adherence to legal mandates and ensuring victim compensation.
+                                        </p>
+                                        
+                                        <h4 className="text-lg font-semibold text-gray-800 pt-2">C. Smart City Integration</h4>
+                                        <p className="text-gray-700">
+                                            As Indian cities evolve into Smart Cities, the HSRP data, aggregated via thousands of ANPR cameras, will feed into city-wide traffic modeling, predictive maintenance planning for roads, and overall urban security management. The HSRP thus transforms from a safety tool into a core component of the city’s digital nervous system.
+                                        </p>
+                                    </div>
+                                    
+                                    {/* VII. Conclusion: Paving the Way for a Safe, Accountable Future */}
+                                    <div className="mb-8 space-y-3">
+                                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                                            VII. Conclusion: Paving the Way for a Safe, Accountable Future
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            The implementation of the High-Security Registration Plate is a revolutionary step that fundamentally alters the landscape of road and transport safety in India. It represents a paradigm shift from a fragmented, manual system to an integrated, digital, and accountable governance model.
+                                        </p>
+                                        <p className="text-gray-700">
+                                            By making the vehicle identity tamper-proof and inextricably linking it to a national database, the HSRP addresses the root cause of vehicular anonymity, enabling effective law enforcement, minimizing the potential for road-related crime, and forming the bedrock for automated traffic management.
+                                        </p>
+                                        <p className="text-gray-700 font-bold">
+                                            The journey towards a fully digitized road network is complex, demanding persistent enforcement, continuous technological upgrades (particularly in ANPR infrastructure), and proactive public awareness. However, the HSRP has successfully laid the groundwork. Its success is a testament to the fact that simple, secure, and standardized digital identification is the most powerful tool for ensuring public safety and steering the transport sector into a truly digital and, more importantly, a significantly safer future.
+                                        </p>
+                                    </div>
+
+                                    {/* Call to action for Contact Us */}
+                                    <div className="p-4 bg-yellow-100 rounded-xl shadow-md border-l-4 border-yellow-500 mt-8 text-center">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                                            Have Suggestions or Feedback? (सुझाव या प्रतिक्रिया?)
+                                        </h3>
+                                        <p className="text-gray-700 mb-4">
+                                            The digital future is a collective effort. Share your insights on HSRP or road safety with us.
+                                        </p>
+                                        <Button 
+                                            className="mt-3 p-3 text-lg font-semibold"
+                                            onClick={() => setStep(7)} // Link to Contact Us page
+                                            colorClass={ACCENT_YELLOW} 
+                                            textColorClass={ACCENT_TEXT}
+                                        >
+                                            Send Your Suggestions Now →
+                                        </Button>
+                                    </div>
+                                </CardContent>
                             </Card>
-                            </div>
-                        );
-                    })}
+                        </div>
+
                     </div>
                 )}
 
@@ -537,7 +763,7 @@
                         
                         {/* QR Code and Instructions (Bilingual) */}
                         <p className="text-sm text-gray-700 mb-4 font-semibold">
-                        भुगतान करने के लिए ऊपर दिए गए **QR कोड को स्कैन करें**।<br/>
+                        भुगतान करने के लिए ऊपर दिए गए <span className="font-bold">QR कोड को स्कैन करें</span>।<br/>
                         *Scan the QR code above to complete the payment.*
                         </p>
 
@@ -618,8 +844,8 @@
                         <div className="border border-yellow-300 bg-yellow-50 p-4 rounded-xl text-left space-y-2 text-gray-700">
                         <p className="font-semibold text-yellow-800">Order ID: <span className="font-mono bg-yellow-200 p-1 rounded">HSRP12003875X</span></p>
                         <p className="text-sm text-gray-600">
-                            ट्रैकिंग विवरण के साथ एक पुष्टि SMS और ईमेल शीघ्र ही भेजा जाएगा। आप होमपेज पर 'Track Your Order' विकल्प का उपयोग कर सकते हैं।
-                            <span className="block mt-1">A confirmation SMS and email with tracking details will be sent shortly. You can use the 'Track Your Order' option on the homepage.</span>
+                            ट्रैकिंग विवरण के साथ एक पुष्टि SMS और ईमेल शीघ्र ही भेजा जाएगा। आप होमपेज पर अन्य विकल्पों का उपयोग कर सकते हैं।
+                            <span className="block mt-1">A confirmation SMS and email with tracking details will be sent shortly.</span>
                         </p>
                         </div>
 
@@ -628,57 +854,165 @@
                     </CardContent>
                     </Card>
                 )}
-
-                {/* --- Step 6: Track Order --- */}
+                
+                {/* --- Step 6: About Us Page (NEW) --- */}
                 {step === 6 && (
-                    <Card className={`w-full max-w-lg p-2 custom-shadow animate-fadeIn ${CARD_BG_LIGHT} text-gray-800`}>
-                    <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">
-                        Track Your Order (अपने ऑर्डर को ट्रैक करें)
-                        </h2>
-                        
-                        <form className="space-y-4">
-                        <Input 
-                            placeholder="Enter 10-digit Order ID (उदाहरण: HSRP12003875X)" 
-                            value={trackingId}
-                            onChange={(e) => {
-                                setTrackingId(e.target.value.toUpperCase());
-                                setTrackResult(null); 
-                            }}
-                        />
-                        <Button className="w-full p-3" onClick={handleTrackOrder} colorClass={ACCENT_YELLOW} textColorClass={ACCENT_TEXT}>
-                            Track Status (स्थिति ट्रैक करें)
-                        </Button>
-                        </form>
+                    <div className="w-full max-w-4xl animate-fadeIn">
+                        <Card className={`p-2 custom-shadow border-t-8 border-blue-800 ${CARD_BG_LIGHT} text-gray-800`}>
+                            <CardContent>
+                                <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
+                                About Us (हमारे बारे में)
+                                </h2>
 
-                        {trackResult && (
-                        <div className={`mt-6 p-4 rounded-xl border-l-4 ${trackResult.status === 'Invalid' ? 'bg-red-50 border-red-500 text-red-700' : 'bg-green-50 border-green-500 text-green-700'}`}>
-                            {trackResult.status === 'Invalid' ? (
-                                <p className="font-semibold">{trackResult.message}</p>
-                            ) : (
-                                <div className="space-y-2">
-                                    <p className="text-lg font-bold">Status: {trackResult.status} (स्थिति)</p>
-                                    <p>Booking Date: <span className="font-medium">{trackResult.date}</span> (बुकिंग तिथि)</p>
-                                    <p>Estimated Delivery: <span className="font-medium">{trackResult.eta}</span> (अनुमानित डिलीवरी)</p>
-                                    <p className="text-sm text-gray-600 mt-2">{trackResult.message}</p>
+                                <div className="space-y-6 text-left">
+                                    
+                                    {/* Mission */}
+                                    <div className="p-4 bg-white rounded-xl shadow-md border-l-4 border-yellow-400">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500 mr-2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                            Our Mission (हमारा लक्ष्य)
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            Our mission is to facilitate the seamless and secure adoption of the <span className="font-bold">High-Security Registration Plate (HSRP)</span> system across India. We aim to be the most trusted, transparent, and user-friendly platform for citizens to book and manage their HSRP plates and colour-coded stickers, thereby supporting the Government's vision for <span className="font-bold">digital road safety and vehicular integrity</span>.
+                                        </p>
+                                    </div>
+
+                                    {/* HSRP Importance */}
+                                    <div className="p-4 bg-white rounded-xl shadow-md border-l-4 border-blue-600">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 mr-2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                            Why HSRP Matters (HSRP क्यों महत्वपूर्ण है)
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            The HSRP is more than just a number plate; it is a <span className="font-bold">digital identity pillar</span> for your vehicle. Its tamper-proof features, including the unique hologram and laser-etched code, prevent theft, curb fraudulent registrations, and enable efficient <span className="font-bold">e-Challan</span> and traffic management through <span className="font-bold">ANPR</span> (Automated Number Plate Recognition) technology. By installing an HSRP, you contribute directly to a safer, more accountable transport ecosystem for everyone.
+                                        </p>
+                                    </div>
+                                    
+                                    {/* Commitment SECTION REMOVED as per user request */}
+                                    
                                 </div>
-                            )}
-                        </div>
-                        )}
-                        
-                        <div className="mt-6 flex justify-start">
-                        {/* Outline button remains Blue on light background */}
-                        <Button variant="outline" className="w-1/3" onClick={() => setStep(0)}>
-                            ← Home
-                        </Button>
-                        </div>
-                    </CardContent>
-                    </Card>
+                                
+                                <div className="mt-8 text-center">
+                                    <Button 
+                                        onClick={() => setStep(0)} 
+                                        className="p-3 text-lg font-semibold"
+                                        colorClass={ACCENT_YELLOW} 
+                                        textColorClass={ACCENT_TEXT}
+                                    >
+                                        Back to Home (होम पर वापस जाएँ)
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
                 )}
+
+
+                {/* --- Step 7: Contact Us Page --- */}
+                {step === 7 && (
+                    <div className="w-full max-w-6xl animate-fadeIn grid md:grid-cols-2 gap-8">
+                        {/* Left Column: Contact Form */}
+                        <Card className={`p-2 custom-shadow ${CARD_BG_LIGHT} text-gray-800 h-fit`}>
+                            <CardContent>
+                                <h2 className="text-2xl font-bold mb-4 text-blue-800">
+                                Send us a Message (हमें संदेश भेजें)
+                                </h2>
+                                <p className="text-gray-600 mb-6 text-sm">Have a question or need assistance? Fill out the form below and we'll get back to you.</p>
+
+                                <form className="space-y-4" onSubmit={handleContactSubmit}>
+                                    <Input 
+                                        placeholder="Your Full Name (आपका पूरा नाम)" 
+                                        name="name"
+                                        value={contactFormData.name}
+                                        onChange={handleContactInputChange}
+                                    />
+                                    <Input 
+                                        placeholder="Your Email (आपका ईमेल)" 
+                                        type="email" 
+                                        name="email"
+                                        value={contactFormData.email}
+                                        onChange={handleContactInputChange}
+                                    />
+                                    <Input 
+                                        placeholder="Subject (विषय)" 
+                                        name="subject"
+                                        value={contactFormData.subject}
+                                        onChange={handleContactInputChange}
+                                    />
+                                    <Input 
+                                        placeholder="Your Message (आपका संदेश)" 
+                                        name="message"
+                                        rows={4}
+                                        value={contactFormData.message}
+                                        onChange={handleContactInputChange}
+                                    />
+                                    <div className="pt-2">
+                                        <Button 
+                                            type="submit" 
+                                            className="w-full p-3 font-semibold" 
+                                            colorClass={PRIMARY_BLUE} 
+                                            textColorClass={PRIMARY_TEXT}
+                                        >
+                                            Submit Enquiry (जांच जमा करें)
+                                        </Button>
+                                    </div>
+                                </form>
+                            </CardContent>
+                        </Card>
+
+                        {/* Right Column: Contact Info */}
+                        <Card className={`p-2 custom-shadow ${CARD_BG_LIGHT} text-gray-800 h-fit`}>
+                            <CardContent className="h-full flex flex-col justify-start">
+                                <h2 className="text-2xl font-bold mb-4 text-blue-800">
+                                Contact Information (संपर्क जानकारी)
+                                </h2>
+                                <p className="text-sm text-gray-600 mb-6">
+                                    We are committed to providing excellent support. Reach out to us via the following methods:
+                                </p>
+
+                                <div className="space-y-6 text-left">
+                                    {/* Phone */}
+                                    <div className="flex items-start space-x-3 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500 flex-shrink-0 mt-1"><path d="M22 16.92v3a2 2 0 0 1-2 2h-3.48a1 1 0 0 1-.95-.68l-1.5-3a1 1 0 0 1 .23-1.09l.3-.3a1 1 0 0 0 .22-1.39l-.88-1.5a1 1 0 0 0-1.5-.23l-3 1.5a1 1 0 0 1-1.09.23l-1.5-.88a1 1 0 0 0-1.39.22l-.3.3a1 1 0 0 1-1.09.23l-3-1.5a1 1 0 0 1-.68-.95V4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2 1 1 0 0 0 1-1h1a1 1 0 0 0 1-1h1a2 2 0 0 1 2 2v3.48a1 1 0 0 1-.68.95l-3 1.5a1 1 0 0 1-.95-.68l-1.5-3a1 1 0 0 0-.68-.23l-.88 1.5a1 1 0 0 1-.23 1.09l.3.3a1 1 0 0 0 .22 1.39l-1.5.88a1 1 0 0 1-.23 1.09l3 1.5a1 1 0 0 0 .95.68h3.48a2 2 0 0 1 2 2v3z"></path></svg>
+                                        <div>
+                                            <p className="font-semibold text-blue-800">Customer Support Hotline</p>
+                                            <p className="text-gray-700 font-mono">1800-123-4567</p>
+                                            <p className="text-xs text-gray-500 mt-1">Available Mon-Sat, 9:00 AM to 6:00 PM IST</p>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Email */}
+                                    <div className="flex items-start space-x-3 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500 flex-shrink-0 mt-1"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                        <div>
+                                            <p className="font-semibold text-blue-800">General Enquiries</p>
+                                            <p className="text-gray-700">support@bookmyhsrp.in</p>
+                                            <p className="text-xs text-gray-500 mt-1">Average response time: 24-48 hours</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Address */}
+                                    <div className="flex items-start space-x-3 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500 flex-shrink-0 mt-1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                        <div>
+                                            <p className="font-semibold text-blue-800">Corporate Office</p>
+                                            <p className="text-gray-700 text-sm">
+                                                HSRP Services HQ, <br/>
+                                                Plot No. 42, Sector 18, <br/>
+                                                Gurugram, Haryana - 122015, India
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
+                
                 
                 {/* Footer Placeholder (Standard light theme) */}
                 <footer className="w-full max-w-6xl mt-12 text-center text-gray-500 text-sm">
-                    <p>BOOK-MY-HSRP | All Rights Reserved 2024</p>
+                    <p>HSRP NUMBER PLATE | All Rights Reserved 2024</p>
                 </footer>
 
 
@@ -694,6 +1028,3 @@
     </script>
 </body>
 </html>
-
-
-

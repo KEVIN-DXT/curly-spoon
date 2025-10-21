@@ -137,6 +137,7 @@
 
         // Card component made generic, caller handles background/text color
         const Card = ({ children, className = '' }) => (
+            // Added flex and min-h for alignment
             <div className={`rounded-xl shadow-xl overflow-hidden ${className}`}>
                 {children}
             </div>
@@ -163,13 +164,13 @@
         
         // HSRP_OPTIONS: Updated action text based on user request.
         const HSRP_OPTIONS = [
-            // 1. HSRP with Colour Sticker (KEEP 'Book')
+            // 1. HSRP with Colour Sticker (REMOVED lg:row-span-2)
             { 
                 title: 'HSRP with Colour Sticker', 
                 description: 'Fresh HSRP and mandatory sticker for all vehicle types.',
                 action: 'Book →', 
                 color: ACCENT_YELLOW, 
-                className: 'lg:row-span-2 lg:h-full', 
+                className: '', // Removed specific class for alignment
             },
             // 2. Replacement/Transfer (CHANGE to 'Click Here')
             { 
@@ -403,7 +404,7 @@
                 {step === 0 && (
                     <div className="w-full max-w-6xl animate-fadeIn">
                         
-                        {/* --- HSRP Options Grid --- */}
+                        {/* --- HSRP Options Grid - Alignment fixed --- */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-12">
                             {HSRP_OPTIONS.map((item, i) => {
                                 const isYellow = item.color.includes('yellow');
@@ -416,10 +417,10 @@
                                 const buttonTextColor = isYellow ? PRIMARY_TEXT : ACCENT_TEXT;
 
                                 return (
-                                    <div key={i} className={`${item.className || ''}`}>
-                                    {/* Card component only defines structure, color is passed via className */}
+                                    <div key={i} className={`h-full ${item.className || ''}`}>
+                                    {/* Card component now forces uniform height and content justification */}
                                     <Card 
-                                        className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor} ${cardTextColor}`}
+                                        className={`text-center custom-shadow h-full flex flex-col justify-between min-h-64 hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor} ${cardTextColor}`}
                                     >
                                     <CardContent className="flex flex-col justify-between h-full space-y-4">
                                         

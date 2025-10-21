@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -22,16 +22,12 @@
 </head>
 <body>
 
-
     <div id="root"></div>
-
 
     <script type="text/babel">
         // --- Component Definitions ---
 
-
         const { useState } = React;
-
 
         const Button = ({ children, onClick, className = '', variant = 'default', disabled = false }) => {
             let baseClasses = "rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 ";
@@ -41,7 +37,6 @@
             } else { // default
                 baseClasses += "bg-[#0a3d62] hover:bg-[#065c26] text-white focus:ring-[#0a3d62]";
             }
-
 
             return (
                 <button
@@ -54,17 +49,16 @@
             );
         };
 
-
-        const Input = ({ placeholder, className = '', type = 'text', value, onChange }) => (
+        const Input = ({ placeholder, className = '', type = 'text', value, onChange, name }) => (
             <input
                 type={type}
+                name={name} // Added name prop for state management
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
                 className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-[#0a3d62] focus:ring-[#0a3d62] focus:ring-1 transition-colors duration-200 ${className}`}
             />
         );
-
 
         const FileInput = ({ label, onChange, fileName }) => (
             <div className="space-y-2">
@@ -90,13 +84,16 @@
             </div>
         );
 
-
-        const Select = ({ children, className = '' }) => (
-            <select className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-[#0a3d62] focus:ring-[#0a3d62] focus:ring-1 transition-colors duration-200 appearance-none ${className}`}>
+        const Select = ({ children, className = '', value, onChange, name }) => (
+            <select 
+                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-[#0a3d62] focus:ring-[#0a3d62] focus:ring-1 transition-colors duration-200 appearance-none ${className}`}
+                value={value}
+                onChange={onChange}
+                name={name} // Added name prop for state management
+            >
                 {children}
             </select>
         );
-
 
         const Card = ({ children, className = '' }) => (
             <div className={`rounded-xl shadow-xl overflow-hidden ${className}`}>
@@ -104,30 +101,53 @@
             </div>
         );
 
-
         const CardContent = ({ children, className = '' }) => (
             <div className={`p-6 ${className}`}>
                 {children}
             </div>
         );
 
+        // --- Data Definitions (Updated) ---
 
-        // --- Main Application Component Logic ---
-
-
+        const INDIAN_STATES_AND_UTS = [
+            "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
+            "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", 
+            "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", 
+            "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", 
+            "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
+            "Uttarakhand", "West Bengal", 
+            "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", 
+            "Lakshadweep", "Delhi", "Puducherry"
+        ];
+        
         const HSRP_OPTIONS = [
-            { title: 'High Security Registration Plate with Colour Sticker', action: 'Book →' },
-            { title: 'Replacement/Retain/Transfer', action: 'Book →' },
-            { title: 'High Security Registration Plate For Electric Vehicle', action: 'Book →' },
-            { title: 'Track Your Order', action: 'Track →' }, 
-            { title: 'Only Colour Sticker', action: 'Book →' },
-            { title: 'High Security Registration Plate For Tractor & Trailer', action: 'Book →' },
-            { title: 'Grievance Redressal', action: 'Enquiry →' }
+            // Updated Title for clarity and added icon
+            { 
+                title: 'New High Security Plate & Colour Sticker', 
+                description: 'Apply for fresh HSRP and mandatory sticker for all vehicle types.',
+                icon: (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                ),
+                action: 'Start Booking →',
+                color: 'bg-[#0a3d62]' // Dark blue for the primary option
+            },
+            { title: 'Replacement/Retain/Transfer', action: 'Book →', color: 'bg-gray-600' },
+            // Updated title
+            { title: 'Plate for Electric Vehicle', action: 'Book →', color: 'bg-green-600' }, 
+            { title: 'Track Your Order', action: 'Track →', color: 'bg-yellow-600' }, 
+            { title: 'Only Colour Sticker', action: 'Book →', color: 'bg-indigo-600' },
+            // Updated title
+            { title: 'Plate For Tractor & Trailer', action: 'Book →', color: 'bg-red-600' }, 
+            { title: 'Grievance Redressal', action: 'Enquiry →', color: 'bg-gray-400' }
         ];
 
-
         const QR_CODE_URL = "https://i.postimg.cc/XJqjxPLY/upi-1760515437331.png";
-
 
         const GlobalStyles = () => (
           <style dangerouslySetInnerHTML={{__html: `
@@ -151,17 +171,33 @@
         );
 
 
-
-
         function App() {
             const [step, setStep] = useState(0);
             const [trackingId, setTrackingId] = useState('');
             const [trackResult, setTrackResult] = useState(null);
             const [screenshotFile, setScreenshotFile] = useState(null); 
             
+            // State for all form data (New: for controlled inputs and warning fix)
+            const [formData, setFormData] = useState({
+                regNo: '',
+                chassisNo: '',
+                engineNo: '',
+                vehicleType: '',
+                fullName: '',
+                contactNo: '',
+                email: '',
+                address: '',
+                state: '',
+            });
+
+            // Universal handler for updating form data (New: for controlled inputs)
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+            
             const handleNext = () => setStep(step + 1);
             const handlePrev = () => setStep(step - 1);
-
 
             const handleOptionClick = (index) => {
                 if (index === 3) {
@@ -171,7 +207,6 @@
                     setScreenshotFile(null);
                 }
             };
-
 
             const handleTrackOrder = () => {
                 if (trackingId.trim() === 'HSRP12003875X') {
@@ -198,9 +233,7 @@
                 }
             };
 
-
             const progressPercent = (step / 3) * 100;
-
 
             return (
                 <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 sm:p-6 font-sans">
@@ -218,7 +251,6 @@
                     <div className="w-1/3 h-1.5 bg-green-600 rounded-full"></div>
                     </div>
                 </header>
-
 
                 {/* Blue Navigation Bar */}
                 <nav className="w-full bg-[#0a3d62] shadow-md mb-8 mt-4">
@@ -244,7 +276,6 @@
                     </div>
                 </nav>
 
-
                 {/* Progress Bar (Visible during the 3-step booking process) */}
                 {(step >= 1 && step <= 3) && ( 
                     <div className="w-full max-w-lg mb-6">
@@ -262,18 +293,35 @@
                     </div>
                 )}
 
-
                 {/* --- Step 0: Homepage/Options --- */}
                 {step === 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl animate-fadeIn">
                     {HSRP_OPTIONS.map((item, i) => (
-                        <Card key={i} className="text-center bg-white custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 border-t-4 border-[#0a3d62]">
+                        <Card 
+                            key={i} 
+                            className={`text-center bg-white custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 border-t-4 border-b-8 ${item.color.replace('bg-', 'border-')}`}
+                        >
                         <CardContent className="flex flex-col justify-between h-full">
-                            <h2 className="text-lg font-semibold mb-6 text-[#1e272e] leading-snug">
-                            {item.title}
-                            </h2>
+                            {/* Special styling for the first, most important tab */}
+                            {i === 0 ? (
+                                <div className="space-y-3 mb-6">
+                                    <div className={`inline-flex items-center justify-center p-3 rounded-full ${item.color} mx-auto shadow-md`}>
+                                        {item.icon}
+                                        <h2 className="text-lg font-bold text-white leading-snug">
+                                            {item.title}
+                                        </h2>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-2 font-medium">{item.description}</p>
+                                </div>
+                            ) : (
+                                <h2 className="text-lg font-semibold mb-6 text-[#1e272e] leading-snug">
+                                {item.title}
+                                </h2>
+                            )}
+                            
                             <Button 
-                            className="w-full p-3 text-lg tracking-wider" 
+                            className={`w-full p-3 text-lg tracking-wider ${item.color.replace('bg-', 'focus:ring-')}`} 
+                            style={{ backgroundColor: item.color.split('-')[1] ? `#${item.color.split('-')[1]}` : item.color}} // Dynamic color for button if possible, else default
                             onClick={() => handleOptionClick(i)}
                             >
                             {item.action}
@@ -284,7 +332,6 @@
                     </div>
                 )}
 
-
                 {/* --- Step 1: Vehicle Info (1 of 3) --- */}
                 {step === 1 && (
                     <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
@@ -293,10 +340,30 @@
                         1. Vehicle Information
                         </h2>
                         <form className="space-y-4">
-                        <Input placeholder="Registration Number* (उदाहरण: UP16XX1234)" />
-                        <Input placeholder="Chassis Number* (चेसिस के अंतिम 5 अंक)" />
-                        <Input placeholder="Engine Number* (इंजन के अंतिम 5 अंक)" />
-                        <Select>
+                        <Input 
+                            placeholder="Registration Number* (उदाहरण: UP16XX1234)" 
+                            name="regNo"
+                            value={formData.regNo}
+                            onChange={handleInputChange}
+                        />
+                        <Input 
+                            placeholder="Chassis Number* (चेसिस के अंतिम 5 अंक)" 
+                            name="chassisNo"
+                            value={formData.chassisNo}
+                            onChange={handleInputChange}
+                        />
+                        <Input 
+                            placeholder="Engine Number* (इंजन के अंतिम 5 अंक)" 
+                            name="engineNo"
+                            value={formData.engineNo}
+                            onChange={handleInputChange}
+                        />
+                        <Select
+                            name="vehicleType" 
+                            value={formData.vehicleType} 
+                            onChange={handleInputChange}
+                        >
+                            {/* value="" will be selected initially because formData.vehicleType is "" */}
                             <option value="" disabled>Choose Vehicle Type* (वाहन प्रकार चुनें)</option>
                             <option value="car">Car (4 Wheeler)</option>
                             <option value="bike">Bike (2 Wheeler)</option>
@@ -313,7 +380,6 @@
                     </Card>
                 )}
 
-
                 {/* --- Step 2: Personal Info (2 of 3) --- */}
                 {step === 2 && (
                     <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
@@ -322,17 +388,44 @@
                         2. Owner Details (मालिक का विवरण)
                         </h2>
                         <form className="space-y-4">
-                        <Input placeholder="Full Name (RC के अनुसार पूरा नाम)" />
-                        <Input placeholder="Contact Number*" type="tel" />
-                        <Input placeholder="Email Address*" type="email" />
-                        <Input placeholder="Full Address (प्लेट डिलीवरी/फिटमेंट के लिए)" />
-                        <Select>
-                            <option value="" disabled>Select State* (राज्य चुनें)</option>
-                            <option>Uttar Pradesh</option>
-                            <option>Delhi</option>
-                            <option>Maharashtra</option>
+                        <Input 
+                            placeholder="Full Name (RC के अनुसार पूरा नाम)" 
+                            name="fullName" 
+                            value={formData.fullName} 
+                            onChange={handleInputChange} 
+                        />
+                        <Input 
+                            placeholder="Contact Number*" 
+                            type="tel" 
+                            name="contactNo" 
+                            value={formData.contactNo} 
+                            onChange={handleInputChange} 
+                        />
+                        <Input 
+                            placeholder="Email Address*" 
+                            type="email" 
+                            name="email" 
+                            value={formData.email} 
+                            onChange={handleInputChange} 
+                        />
+                        <Input 
+                            placeholder="Full Address (प्लेट डिलीवरी/फिटमेंट के लिए)" 
+                            name="address" 
+                            value={formData.address} 
+                            onChange={handleInputChange} 
+                        />
+                        <Select 
+                            name="state" 
+                            value={formData.state} // The selected value is controlled by this state
+                            onChange={handleInputChange}
+                        >
+                            {/* Removed 'selected' from the option, relying on value={formData.state} */}
+                            <option value="" disabled>Select State/UT* (राज्य/केंद्र शासित प्रदेश चुनें)</option>
+                            {INDIAN_STATES_AND_UTS.map(state => (
+                                <option key={state} value={state}>{state}</option>
+                            ))}
                         </Select>
-                        <Input placeholder="Pincode*" type="number" />
+                        {/* Pincode Input REMOVED as requested */}
                         </form>
                         <div className="mt-6 flex justify-between gap-4">
                         <Button variant="outline" className="w-1/3" onClick={handlePrev}>
@@ -345,7 +438,6 @@
                     </CardContent>
                     </Card>
                 )}
-
 
                 {/* --- Step 3: Payment & Upload (3 of 3) - MERGED STEP --- */}
                 {step === 3 && (
@@ -373,7 +465,6 @@
                         *Scan the QR code above to complete the payment.*
                         </p>
 
-
                         <img 
                         src={QR_CODE_URL} 
                         alt="UPI QR Code for Payment" 
@@ -390,14 +481,12 @@
                                 </p>
                             </div>
 
-
                             <FileInput 
                                 label="Upload Screenshot (स्क्रीनशॉट अपलोड करें)"
                                 onChange={handleFileChange}
                                 fileName={screenshotFile ? screenshotFile.name : null}
                             />
                         </div>
-
 
                         <div className="mt-6 flex justify-between gap-4">
                             <Button variant="outline" className="w-1/3" onClick={handlePrev}>
@@ -415,7 +504,6 @@
                     </CardContent>
                     </Card>
                 )}
-
 
                 {/* --- Step 5: Thank You Page (New Step 5) --- */}
                 {step === 5 && (
@@ -443,15 +531,12 @@
                         </p>
                         </div>
 
-
                         {/* Return to Home button removed as requested */}
                         <p className="mt-4 text-sm text-gray-500">You can close this window now.</p>
-
 
                     </CardContent>
                     </Card>
                 )}
-
 
                 {/* --- Step 6: Track Order (New Step 6) --- */}
                 {step === 6 && (
@@ -474,7 +559,6 @@
                             Track Status (स्थिति ट्रैक करें)
                         </Button>
                         </form>
-
 
                         {trackResult && (
                         <div className={`mt-6 p-4 rounded-xl border-l-4 ${trackResult.status === 'Invalid' ? 'bg-red-50 border-red-500' : 'bg-green-50 border-green-500'}`}>
@@ -500,17 +584,14 @@
                     </Card>
                 )}
 
-
                 </div>
             );
         }
-
 
         // --- Render the Application ---
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
         root.render(<App />);
-
 
     </script>
 </body>

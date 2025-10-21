@@ -29,13 +29,22 @@
 
         const { useState } = React;
 
-        const Button = ({ children, onClick, className = '', variant = 'default', disabled = false }) => {
+        const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = 'bg-[#0a3d62]' }) => {
+            // Determine hover and focus ring color from the main button color
+            const baseColor = colorClass.replace('bg-', '');
+            
             let baseClasses = "rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 ";
             
             if (variant === 'outline') {
                 baseClasses += "bg-white text-[#0a3d62] border border-[#0a3d62] hover:bg-[#e0f7fa] focus:ring-[#0a3d62]";
             } else { // default
-                baseClasses += "bg-[#0a3d62] hover:bg-[#065c26] text-white focus:ring-[#0a3d62]";
+                // Use a darker shade for hover if possible, otherwise use the base color
+                let hoverClass = colorClass;
+                if (baseColor === '[#0a3d62]') hoverClass = 'hover:bg-[#062e49]'; 
+                else if (baseColor === '[#FF9933]') hoverClass = 'hover:bg-[#e07b1a]';
+                else hoverClass = `hover:opacity-90`;
+
+                baseClasses += `${colorClass} ${hoverClass} text-white focus:ring-${baseColor}`;
             }
 
             return (
@@ -107,7 +116,7 @@
             </div>
         );
 
-        // --- Data Definitions (Updated) ---
+        // --- Data Definitions (Updated to match screenshot aesthetic) ---
 
         const INDIAN_STATES_AND_UTS = [
             "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
@@ -120,8 +129,9 @@
             "Lakshadweep", "Delhi", "Puducherry"
         ];
         
+        // UPDATED HSRP_OPTIONS with distinct colors and slightly refined titles
         const HSRP_OPTIONS = [
-            // Updated Title for clarity and added icon
+            // 1. Primary Option (Dark Blue/Teal look from screenshot)
             { 
                 title: 'New High Security Plate & Colour Sticker', 
                 description: 'Apply for fresh HSRP and mandatory sticker for all vehicle types.',
@@ -135,19 +145,53 @@
                     </svg>
                 ),
                 action: 'Start Booking →',
-                color: 'bg-[#0a3d62]' // Dark blue for the primary option
+                color: 'bg-[#0a3d62]' // Dark Blue
             },
-            { title: 'Replacement/Retain/Transfer', action: 'Book →', color: 'bg-gray-600' },
-            // Updated title
-            { title: 'Plate for Electric Vehicle', action: 'Book →', color: 'bg-green-600' }, 
-            { title: 'Track Your Order', action: 'Track →', color: 'bg-yellow-600' }, 
-            { title: 'Only Colour Sticker', action: 'Book →', color: 'bg-indigo-600' },
-            // Updated title
-            { title: 'Plate For Tractor & Trailer', action: 'Book →', color: 'bg-red-600' }, 
-            { title: 'Grievance Redressal', action: 'Enquiry →', color: 'bg-gray-400' }
+            // 2. Track Order (Saffron/Orange - highly prominent)
+            { 
+                title: 'Track Your Order', 
+                description: 'Check the current status of your existing HSRP application.', 
+                action: 'Track Status →', 
+                color: 'bg-[#FF9933]' // Saffron/Orange
+            },
+            // 3. Only Colour Sticker (Light Blue/Indigo)
+            { 
+                title: 'Only Colour Sticker', 
+                description: 'Apply only for the mandatory colour-coded fuel sticker.', 
+                action: 'Book Sticker →', 
+                color: 'bg-indigo-600'
+            },
+            // 4. Reschedule/Cancel Appointment (Action/Red-Green Mix)
+            { 
+                title: 'Reschedule/Cancel Appointment', 
+                description: 'Modify or cancel a confirmed fitment appointment.', 
+                action: 'Manage Appointment →', 
+                color: 'bg-teal-600' // Teal
+            },
+            // 5. Replacement/Transfer (Gray/Utility)
+            { 
+                title: 'Plate Replacement / Transfer', 
+                description: 'Book plates for damaged or transfer cases.', 
+                action: 'Book →', 
+                color: 'bg-stone-500' // Stone Gray
+            },
+            // 6. EV Plate (Green)
+            { 
+                title: 'Plate for Electric Vehicle', 
+                description: 'Book the unique green plate for electric vehicles.', 
+                action: 'Book EV Plate →', 
+                color: 'bg-green-600' // Green
+            }, 
+            // 7. Grievance Redressal (Placeholder/Soft Color)
+            { 
+                title: 'Grievance Redressal / Query', 
+                description: 'Submit an enquiry or file a complaint regarding an order.', 
+                action: 'Enquiry →', 
+                color: 'bg-purple-500' // Purple
+            }
         ];
 
-        const QR_CODE_URL = "https://i.postimg.cc/HL8Ynxzr/Salmanrampwalk-png.webp";
+        const QR_CODE_URL = "https://i.postimg.cc/XJqjxPLY/upi-1760515437331.png";
 
         const GlobalStyles = () => (
           <style dangerouslySetInnerHTML={{__html: `
@@ -161,11 +205,12 @@
             .progress-bar-segment {
                 transition: width 0.3s ease-in-out;
             }
+            /* Custom shadow adjusted to be slightly darker for the modern look */
             .custom-shadow {
-              box-shadow: 0 10px 15px -3px rgba(10, 61, 98, 0.1), 0 4px 6px -2px rgba(10, 61, 98, 0.05);
+              box-shadow: 0 15px 25px -5px rgba(10, 61, 98, 0.15), 0 5px 10px -2px rgba(10, 61, 98, 0.08);
             }
             .nav-link:hover {
-                color: #fca311; /* A shade of orange/saffron */
+                color: #FF9933; /* Saffron/Orange Accent */
             }
           `}} />
         );
@@ -199,10 +244,13 @@
             const handleNext = () => setStep(step + 1);
             const handlePrev = () => setStep(step - 1);
 
+            // Updated logic based on the new HSRP_OPTIONS array structure
             const handleOptionClick = (index) => {
-                if (index === 3) {
+                // Index 1 (Track Your Order) goes to Step 6
+                if (index === 1) { 
                     setStep(6);
                 } else {
+                    // All other options go to Step 1 (Booking Flow)
                     setStep(1);
                     setScreenshotFile(null);
                 }
@@ -244,11 +292,11 @@
                     <h1 className="text-4xl font-extrabold text-[#0a3d62] tracking-wider mb-2">
                     BOOK-MY-HSRP
                     </h1>
-                    {/* Tricolour Divider */}
+                    {/* Tricolour Divider - Updated Saffron Color */}
                     <div className="flex w-32 justify-center gap-1">
-                    <div className="w-1/3 h-1.5 bg-orange-500 rounded-full"></div>
-                    <div className="w-1/3 h-1.5 bg-gray-200 rounded-full"></div>
-                    <div className="w-1/3 h-1.5 bg-green-600 rounded-full"></div>
+                    <div className="w-1/3 h-1.5 bg-[#FF9933] rounded-full"></div> {/* Saffron */}
+                    <div className="w-1/3 h-1.5 bg-gray-200 rounded-full"></div> {/* White Placeholder */}
+                    <div className="w-1/3 h-1.5 bg-green-600 rounded-full"></div> {/* Green */}
                     </div>
                 </header>
 
@@ -262,14 +310,14 @@
                         </li>
                         {/* About (Placeholder) */}
                         <li className="p-3 cursor-pointer nav-link" onClick={() => { /* In a real app, this would route */ }}>
-                        About
+                        Corporate Profile
                         </li>
                         {/* Contact (Placeholder) */}
                         <li className="p-3 cursor-pointer nav-link" onClick={() => { /* In a real app, this would route */ }}>
-                        Contact
+                        Contact Us
                         </li>
-                        {/* Track Order */}
-                        <li className="p-3 cursor-pointer nav-link text-yellow-300" onClick={() => setStep(6)}> 
+                        {/* Track Order - Highlighted in Saffron */}
+                        <li className="p-3 cursor-pointer nav-link text-[#FF9933]" onClick={() => setStep(6)}> 
                         Track Order
                         </li>
                     </ul>
@@ -299,32 +347,48 @@
                     {HSRP_OPTIONS.map((item, i) => (
                         <Card 
                             key={i} 
-                            className={`text-center bg-white custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 border-t-4 border-b-8 ${item.color.replace('bg-', 'border-')}`}
+                            // Use a uniform style but with different accent colors for the button
+                            className={`text-center bg-white custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 border-t-8 border-transparent`}
                         >
-                        <CardContent className="flex flex-col justify-between h-full">
-                            {/* Special styling for the first, most important tab */}
-                            {i === 0 ? (
-                                <div className="space-y-3 mb-6">
-                                    <div className={`inline-flex items-center justify-center p-3 rounded-full ${item.color} mx-auto shadow-md`}>
-                                        {item.icon}
-                                        <h2 className="text-lg font-bold text-white leading-snug">
-                                            {item.title}
-                                        </h2>
-                                    </div>
-                                    <p className="text-sm text-gray-600 mt-2 font-medium">{item.description}</p>
+                        <CardContent className="flex flex-col justify-between h-full space-y-4">
+                            
+                            <div className="space-y-3 mb-4">
+                                {/* Icon Circle Color (Primary card gets white background for contrast) */}
+                                <div className
+                                    ={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg 
+                                    ${i === 0 ? 'bg-white border-4 border-[#0a3d62]' : item.color.replace('bg-', 'bg-')}
+                                    ${i === 0 ? 'text-[#0a3d62]' : 'text-white'}`}
+                                >
+                                    {/* Re-rendering the icon with the correct color based on circle background */}
+                                    {i === 0 ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            {/* Generic Icon - Placeholder for non-primary options */}
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12" y2="16"></line>
+                                        </svg>
+                                    )}
                                 </div>
-                            ) : (
-                                <h2 className="text-lg font-semibold mb-6 text-[#1e272e] leading-snug">
-                                {item.title}
+                                <h2 className="text-xl font-bold text-[#1e272e] leading-snug">
+                                    {item.title}
                                 </h2>
-                            )}
+                                <p className="text-sm text-gray-500 font-medium">{item.description}</p>
+                            </div>
                             
                             <Button 
-                            className={`w-full p-3 text-lg tracking-wider ${item.color.replace('bg-', 'focus:ring-')}`} 
-                            style={{ backgroundColor: item.color.split('-')[1] ? `#${item.color.split('-')[1]}` : item.color}} // Dynamic color for button if possible, else default
-                            onClick={() => handleOptionClick(i)}
+                                className={`w-full p-3 text-lg tracking-wider font-semibold`} 
+                                colorClass={item.color}
+                                onClick={() => handleOptionClick(i)}
                             >
-                            {item.action}
+                                {item.action}
                             </Button>
                         </CardContent>
                         </Card>

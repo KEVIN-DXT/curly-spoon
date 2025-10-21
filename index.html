@@ -271,6 +271,48 @@
                 </Card>
             </div>
         );
+        
+        // --- DISCLAIMER PAGE COMPONENT (step 9) ---
+        const DisclaimerPage = ({ setStep }) => (
+            <div className="w-full max-w-4xl animate-fadeIn mx-auto">
+                <Card className={`p-2 custom-shadow border-t-8 border-red-500 ${CARD_BG_LIGHT} text-gray-800`}>
+                    <CardContent>
+                        <h2 className="text-3xl font-bold mb-8 text-center text-red-700">
+                            अस्वीकरण (Disclaimer)
+                        </h2>
+                        
+                        <div className="space-y-6">
+                            {/* English Version */}
+                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-inner">
+                                <h3 className="text-xl font-bold text-gray-800 mb-3 border-b pb-2 border-gray-200">English Version</h3>
+                                <p className="text-gray-700 leading-relaxed text-base">
+                                    Disclaimer: We are an independent, private website providing information and news on <span className="font-semibold">HSRP (High Security Registration Plate)</span> and road safety. We are not affiliated with, authorized, or endorsed by any Government agency (Central or State) or any authorized HSRP vendor. We do not take any bookings or payments for HSRP.
+                                </p>
+                            </div>
+
+                            {/* Hindi Version */}
+                            <div className="p-4 bg-red-50 rounded-xl border border-red-200 shadow-inner">
+                                <h3 className="text-xl font-bold text-red-800 mb-3 border-b pb-2 border-red-200">हिंदी संस्करण</h3>
+                                <p className="text-gray-700 leading-relaxed text-base">
+                                    अस्वीकरण: हम <span className="font-semibold">HSRP</span> और सड़क सुरक्षा पर जानकारी और समाचार प्रदान करने वाली एक स्वतंत्र, निजी वेबसाइट हैं। हम किसी भी सरकारी एजेंसी या किसी अधिकृत HSRP वेंडर से संबद्ध, अधिकृत या समर्थित नहीं हैं। हम <span className="font-bold text-red-700">HSRP के लिए कोई बुकिंग या भुगतान नहीं लेते हैं।</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 text-center">
+                            <Button 
+                                onClick={() => setStep(0)} 
+                                className="p-3 text-lg font-semibold"
+                                colorClass={ACCENT_YELLOW} 
+                                textColorClass={ACCENT_TEXT}
+                            >
+                                Back to Home (होम पर वापस जाएँ)
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        );
 
 
         // --- Data Definitions ---
@@ -282,7 +324,7 @@
             "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", 
             "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
             "Uttarakhand", "West Bengal", 
-            "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", 
+            "Andaman and Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", 
             "Lakshadweep", "Delhi", "Puducherry"
         ];
         
@@ -496,7 +538,7 @@
                         <li className={`p-3 cursor-pointer nav-link ${step === 0 ? 'active' : 'hover:text-yellow-400'}`} onClick={() => setStep(0)}>
                         Home
                         </li>
-                        {/* FAQs - NEW LINK ADDED */}
+                        {/* FAQs */}
                         <li className={`p-3 cursor-pointer nav-link ${step === 8 ? 'active' : 'hover:text-yellow-400'}`} onClick={() => setStep(8)}>
                         FAQs
                         </li>
@@ -508,6 +550,7 @@
                         <li className={`p-3 cursor-pointer nav-link ${step === 7 ? 'active' : 'hover:text-yellow-400'}`} onClick={() => setStep(7)}>
                         Contact Us
                         </li>
+                        {/* DISCLAIMER LINK REMOVED FROM NAVBAR */}
                     </ul>
                     </div>
                 </nav>
@@ -1141,10 +1184,22 @@
                 {/* --- Step 8: FAQs Page --- */}
                 {step === 8 && <FAQSection setStep={setStep} />}
 
+                {/* --- Step 9: Disclaimer Page --- */}
+                {step === 9 && <DisclaimerPage setStep={setStep} />}
+
                 
-                {/* Footer Placeholder (Standard light theme) */}
+                {/* Footer Placeholder (Standard light theme) - UPDATED TO INCLUDE DISCLAIMER */}
                 <footer className="w-full max-w-6xl mt-12 text-center text-gray-500 text-sm">
-                    <p>HSRP NUMBER PLATE | All Rights Reserved 2024</p>
+                    <p className="space-x-3">
+                        <span>HSRP NUMBER PLATE | All Rights Reserved 2024</span>
+                        <span className="text-gray-400">|</span>
+                        <span 
+                            className="text-blue-600 hover:text-blue-800 cursor-pointer transition-colors duration-200 font-medium" 
+                            onClick={() => setStep(9)}
+                        >
+                            Disclaimer (अस्वीकरण)
+                        </span>
+                    </p>
                 </footer>
 
 

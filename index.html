@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOK-MY-HSRP - Lighter Theme</title>
-    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load React, ReactDOM, and Babel --><script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <title>BOOK-MY-HSRP - Light Theme</title>
+    
+
+<script src="https://cdn.tailwindcss.com"></script>
+    
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
@@ -15,13 +19,15 @@
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
+            /* Light Background for the body */
+            background-color: #f9fafb; /* bg-gray-50 equivalent */
         }
         .uppercase-input {
             text-transform: uppercase;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50"> <!-- Light background for the page -->
 
     <div id="root"></div>
 
@@ -30,25 +36,26 @@
 
         const { useState } = React;
         
-        // Define new VERY light theme colors
-        const PRIMARY_BLUE = 'bg-blue-400'; // Even Lighter Blue Main Color
-        const PRIMARY_TEXT = 'text-blue-700'; // Darker blue for text contrast
-        const ACCENT_YELLOW = 'bg-yellow-200'; // Very Light Yellow Accent
-        const ACCENT_TEXT = 'text-yellow-800'; // Darker yellow for text contrast
+        // --- VIBRANT COLORS FROM SCREENSHOT ---
+        const PRIMARY_BLUE = 'bg-blue-800'; // Deep Vibrant Blue
+        const PRIMARY_TEXT = 'text-white'; 
+        const ACCENT_YELLOW = 'bg-yellow-400'; // Bright Saffron/Yellow
+        const ACCENT_TEXT = 'text-gray-800'; // Dark text for contrast on yellow
 
         const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = PRIMARY_BLUE, textColorClass = 'text-white' }) => {
             let baseClasses = "rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 ";
             
             if (variant === 'outline') {
-                baseClasses += "bg-white text-blue-400 border border-blue-400 hover:bg-blue-50 focus:ring-blue-400";
+                // Outline variant uses the vibrant blue color for border and text
+                baseClasses += "bg-transparent text-blue-800 border border-blue-800 hover:bg-blue-50 focus:ring-blue-800";
             } else { 
                 baseClasses += `${colorClass} hover:opacity-90 ${textColorClass} focus:ring-opacity-75 focus:ring-2 focus:ring-offset-2`;
                 
                 // Add specific hover effects
-                if (colorClass.includes('blue-400')) { 
-                    baseClasses += ' hover:bg-blue-500 focus:ring-blue-400';
-                } else if (colorClass.includes('yellow-200')) { 
-                    baseClasses += ' hover:bg-yellow-300 focus:ring-yellow-200';
+                if (colorClass.includes('blue-800')) { 
+                    baseClasses += ' hover:bg-blue-700 focus:ring-blue-800';
+                } else if (colorClass.includes('yellow-400')) { 
+                    baseClasses += ' hover:bg-yellow-500 focus:ring-yellow-400';
                 }
             }
 
@@ -71,14 +78,15 @@
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-400 focus:ring-blue-400 focus:ring-1 transition-colors duration-200 uppercase-input ${className}`}
+                // Standard input on dark card
+                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-yellow-400 focus:ring-yellow-400 focus:ring-1 transition-colors duration-200 uppercase-input bg-white text-gray-800 ${className}`}
             />
         );
         
         const FileInput = ({ label, onChange, fileName }) => (
             <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">{label}</label>
-                <div className="relative border border-gray-300 rounded-xl p-3 cursor-pointer hover:border-blue-400 transition-colors duration-200">
+                <label className="block text-sm font-medium text-white">{label}</label> {/* Changed text to white */}
+                <div className="relative border border-gray-300 bg-white rounded-xl p-3 cursor-pointer hover:border-yellow-400 transition-colors duration-200">
                     <input
                         type="file"
                         className="absolute inset-0 opacity-0 cursor-pointer"
@@ -89,7 +97,7 @@
                         <span className="truncate">
                             {fileName || 'Click to upload screenshot...'}
                         </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400"> {/* Changed icon color to yellow */}
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -101,7 +109,7 @@
 
         const Select = ({ children, className = '', value, onChange, name }) => (
             <select 
-                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-400 focus:ring-blue-400 focus:ring-1 transition-colors duration-200 appearance-none ${className}`}
+                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-yellow-400 focus:ring-yellow-400 focus:ring-1 transition-colors duration-200 appearance-none bg-white text-gray-800 ${className}`}
                 value={value}
                 onChange={onChange}
                 name={name} 
@@ -110,8 +118,10 @@
             </select>
         );
 
+        // Card component now uses bg-blue-800
         const Card = ({ children, className = '' }) => (
-            <div className={`rounded-xl shadow-xl overflow-hidden ${className}`}>
+            // Added bg-blue-800 and text-white here
+            <div className={`rounded-xl shadow-xl ${PRIMARY_BLUE} ${PRIMARY_TEXT} overflow-hidden ${className}`}>
                 {children}
             </div>
         );
@@ -122,7 +132,7 @@
             </div>
         );
 
-        // --- Data Definitions (Colors updated for Very Light Theme) ---
+        // --- Data Definitions (Colors updated for Screenshot Theme) ---
 
         const INDIAN_STATES_AND_UTS = [
             "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
@@ -135,63 +145,63 @@
             "Lakshadweep", "Delhi", "Puducherry"
         ];
         
-        // HSRP_OPTIONS: Structured and colored with Very Light Theme
+        // HSRP_OPTIONS: Structured and colored with Deep Blue and Bright Yellow
         const HSRP_OPTIONS = [
-            // 1. HSRP with Colour Sticker (Very Light Yellow, Large Card: spans 2 rows)
+            // 1. HSRP with Colour Sticker (Bright Yellow)
             { 
                 title: 'HSRP with Colour Sticker', 
                 description: 'Apply for fresh HSRP and mandatory sticker for all vehicle types.',
                 action: 'Book →', 
-                color: ACCENT_YELLOW, // Very Light Yellow
+                color: ACCENT_YELLOW, 
                 className: 'lg:row-span-2 lg:h-full', 
                 navAction: 'booking'
             },
-            // 2. Replacement/Transfer (Very Light Blue) - Top Right Grid, Row 1, Col 1
+            // 2. Replacement/Transfer (Deep Blue)
             { 
                 title: 'Replacement/Retain/Transfer', 
                 description: 'Book plates for damaged or transfer cases.', 
                 action: 'Book →', 
-                color: PRIMARY_BLUE, // Very Light Blue
+                color: PRIMARY_BLUE, 
                 navAction: 'booking'
             },
-            // 3. Plate for Electric Vehicle (Very Light Blue) - Top Right Grid, Row 1, Col 2
+            // 3. Plate for Electric Vehicle (Deep Blue)
             { 
                 title: 'Plate for Electric Vehicle', 
                 description: 'Book the unique green plate for electric vehicles.', 
                 action: 'Book EV Plate →', 
-                color: PRIMARY_BLUE, // Very Light Blue
+                color: PRIMARY_BLUE, 
                 navAction: 'booking'
             }, 
-            // 4. Track Your Order (Very Light Blue) - Top Right Grid, Row 1, Col 3
+            // 4. Track Your Order (Deep Blue)
             { 
                 title: 'Track Your Order', 
                 description: 'Check the current status of your existing HSRP application.', 
                 action: 'Track →', 
-                color: PRIMARY_BLUE, // Very Light Blue
+                color: PRIMARY_BLUE, 
                 navAction: 'tracking' 
             },
-            // 5. Only Colour Sticker (Very Light Yellow) - Middle Right Grid, Row 2, Col 1
+            // 5. Only Colour Sticker (Bright Yellow)
             { 
                 title: 'Only Colour Sticker', 
                 description: 'Apply only for the mandatory colour-coded fuel sticker.', 
                 action: 'Book →', 
-                color: ACCENT_YELLOW, // Very Light Yellow
+                color: ACCENT_YELLOW, 
                 navAction: 'booking'
             },
-            // 6. Plate for Tractor & Trailer (Very Light Blue) - Middle Right Grid, Row 2, Col 2
+            // 6. Plate for Tractor & Trailer (Deep Blue)
             { 
                 title: 'Plate for Tractor & Trailer', 
                 description: 'Apply for HSRP for Tractor or Trailer vehicles.', 
                 action: 'Book →', 
-                color: PRIMARY_BLUE, // Very Light Blue
+                color: PRIMARY_BLUE, 
                 navAction: 'booking'
             },
-            // 7. Grievance Redressal (Very Light Yellow) - Middle Right Grid, Row 2, Col 3
+            // 7. Grievance Redressal (Bright Yellow)
             { 
                 title: 'Grievance Redressal', 
                 description: 'Submit an enquiry or file a complaint regarding an order.', 
                 action: 'Enquiry →', 
-                color: ACCENT_YELLOW, // Very Light Yellow
+                color: ACCENT_YELLOW, 
                 navAction: 'booking' 
             }
         ];
@@ -210,12 +220,12 @@
             .progress-bar-segment {
                 transition: width 0.3s ease-in-out;
             }
-            /* Custom shadow adjusted to use the blue color */
+            /* Custom shadow uses blue for a clean look */
             .custom-shadow {
-              box-shadow: 0 15px 25px -5px rgba(96, 165, 250, 0.2), 0 5px 10px -2px rgba(96, 165, 250, 0.1); /* blue-400 shadow */
+              box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.1), 0 4px 6px -2px rgba(30, 58, 138, 0.05); /* blue-800 shadow */
             }
             .nav-link:hover {
-                color: #fcd34d; /* yellow-300 for hover */
+                color: #fca5a5; /* Reddish hover effect for contrast */
             }
           `}} />
         );
@@ -291,40 +301,40 @@
             const progressPercent = (step / 3) * 100;
 
             return (
-                <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 sm:p-6 font-sans">
+                <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 sm:p-6 font-sans text-gray-800">
                 <GlobalStyles />
                 
-                {/* Header */}
+                {/* Header (Light Theme Style) */}
                 <header className="w-full flex flex-col items-center mb-0 max-w-6xl">
-                    <h1 className="text-4xl font-extrabold text-blue-600 tracking-wider mb-2">
+                    <h1 className="text-4xl font-extrabold text-blue-800 tracking-wider mb-2">
                     BOOK-MY-HSRP
                     </h1>
-                    {/* Tricolour Divider - Updated Yellow Color */}
+                    {/* Tricolour Divider - Bright Yellow color used */}
                     <div className="flex w-32 justify-center gap-1">
-                    <div className="w-1/3 h-1.5 bg-yellow-300 rounded-full"></div> {/* Light Yellow */}
-                    <div className="w-1/3 h-1.5 bg-gray-200 rounded-full"></div> {/* White Placeholder */}
-                    <div className="w-1/3 h-1.5 bg-green-600 rounded-full"></div> {/* Green */}
+                    <div className="w-1/3 h-1.5 bg-yellow-400 rounded-full"></div> 
+                    <div className="w-1/3 h-1.5 bg-gray-200 rounded-full"></div> 
+                    <div className="w-1/3 h-1.5 bg-green-600 rounded-full"></div> 
                     </div>
                 </header>
 
-                {/* Blue Navigation Bar */}
-                <nav className="w-full bg-blue-400 shadow-md mb-8 mt-4">
+                {/* Blue Navigation Bar (Deep Blue) */}
+                <nav className="w-full bg-blue-800 shadow-md mb-8 mt-4">
                     <div className="max-w-6xl mx-auto flex justify-center sm:justify-start">
                     <ul className="flex flex-wrap text-white text-sm sm:text-base font-semibold">
                         {/* Home */}
-                        <li className="p-3 cursor-pointer nav-link" onClick={() => setStep(0)}>
+                        <li className="p-3 cursor-pointer nav-link hover:text-yellow-400" onClick={() => setStep(0)}>
                         Home
                         </li>
                         {/* About (Placeholder) */}
-                        <li className="p-3 cursor-pointer nav-link">
+                        <li className="p-3 cursor-pointer nav-link hover:text-yellow-400">
                         Corporate Profile
                         </li>
                         {/* Contact (Placeholder) */}
-                        <li className="p-3 cursor-pointer nav-link">
+                        <li className="p-3 cursor-pointer nav-link hover:text-yellow-400">
                         Contact Us
                         </li>
                         {/* Track Order - Highlighted in Yellow */}
-                        <li className="p-3 cursor-pointer nav-link text-yellow-100" onClick={() => setStep(6)}> 
+                        <li className="p-3 cursor-pointer nav-link text-yellow-400 font-bold" onClick={() => setStep(6)}> 
                         Track Order
                         </li>
                     </ul>
@@ -340,40 +350,37 @@
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div 
-                        className="progress-bar-segment bg-blue-400 h-2.5 rounded-full" 
+                        className="progress-bar-segment bg-blue-800 h-2.5 rounded-full" 
                         style={{ width: `${(step / 3) * 100}%` }}
                         ></div>
                     </div>
                     </div>
                 )}
 
-                {/* --- Step 0: Homepage/Options (Layout matches user's image, colors are light) --- */}
+                {/* --- Step 0: Homepage/Options (Vibrant colors on light theme) --- */}
                 {step === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl animate-fadeIn">
                     {HSRP_OPTIONS.map((item, i) => {
                         const isYellow = item.color.includes('yellow');
-                        const cardBgColor = item.color; // e.g., bg-yellow-200 or bg-blue-400
+                        const cardBgColor = item.color; // bg-yellow-400 or bg-blue-800
                         
-                        // Text color based on background for readability
-                        const cardTextColor = isYellow ? 'text-blue-800' : 'text-white';
+                        const cardTextColor = isYellow ? ACCENT_TEXT : PRIMARY_TEXT; // Dark text on Yellow, White text on Blue
                         
-                        // Inverted buttons for high contrast on light theme
+                        // Button styles: Yellow cards have Blue buttons, Blue cards have Yellow buttons
                         const buttonBgColor = isYellow ? PRIMARY_BLUE : ACCENT_YELLOW;
-                        const buttonTextColor = isYellow ? 'text-white' : 'text-blue-700';
-                        const iconBgColor = isYellow ? PRIMARY_BLUE : ACCENT_YELLOW;
-                        const iconTextColor = isYellow ? 'text-white' : 'text-blue-700';
+                        const buttonTextColor = isYellow ? PRIMARY_TEXT : ACCENT_TEXT;
 
                         return (
+                            <div key={i} className={`${item.className || ''}`}>
                             <Card 
-                                key={i} 
-                                className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor} ${item.className || ''}`}
+                                className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor}`}
                             >
                             <CardContent className="flex flex-col justify-between h-full space-y-4">
                                 
                                 <div className={`space-y-3 mb-4 flex flex-col items-center ${cardTextColor}`}>
-                                    {/* Icon Circle: Inverted color for contrast */}
+                                    {/* Icon - Simplified for light theme contrast */}
                                     <div
-                                        className={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg ${iconBgColor} ${iconTextColor}`}
+                                        className={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg ${isYellow ? PRIMARY_BLUE : ACCENT_YELLOW} ${isYellow ? PRIMARY_TEXT : ACCENT_TEXT}`}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <circle cx="12" cy="12" r="10"></circle>
@@ -387,6 +394,7 @@
                                     <p className="text-sm font-medium opacity-90">{item.description}</p>
                                 </div>
                                 
+                                {/* Button with Inverted Colors */}
                                 <Button 
                                     className={`w-full p-3 text-lg tracking-wider font-semibold`}
                                     onClick={() => handleOptionClick(item)} 
@@ -397,6 +405,7 @@
                                 </Button>
                             </CardContent>
                             </Card>
+                            </div>
                         );
                     })}
                     </div>
@@ -404,9 +413,9 @@
 
                 {/* --- Step 1: Vehicle Info (1 of 3) --- */}
                 {step === 1 && (
-                    <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
+                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
                         1. Vehicle Information (वाहन जानकारी)
                         </h2>
                         <form className="space-y-4">
@@ -443,7 +452,7 @@
                         </Select>
                         </form>
                         <div className="mt-6 flex justify-end">
-                        <Button className="w-full p-3" onClick={handleNext}>
+                        <Button className="w-full p-3" onClick={handleNext} colorClass={ACCENT_YELLOW} textColorClass={ACCENT_TEXT}>
                             Proceed to Personal Details → (व्यक्तिगत विवरण पर जाएँ)
                         </Button>
                         </div>
@@ -453,9 +462,9 @@
 
                 {/* --- Step 2: Personal Info (2 of 3) --- */}
                 {step === 2 && (
-                    <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
+                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
                         2. Owner Details (मालिक का विवरण)
                         </h2>
                         <form className="space-y-4">
@@ -500,7 +509,12 @@
                         <Button variant="outline" className="w-1/3" onClick={handlePrev}>
                             ← Back
                         </Button>
-                        <Button className="w-2/3 p-3" onClick={handleNext}>
+                        <Button 
+                            className="w-2/3 p-3" 
+                            onClick={handleNext} 
+                            colorClass={ACCENT_YELLOW} 
+                            textColorClass={ACCENT_TEXT}
+                        >
                             Continue to Payment → (भुगतान के लिए आगे बढ़ें)
                         </Button>
                         </div>
@@ -510,14 +524,14 @@
 
                 {/* --- Step 3: Payment & Upload (3 of 3) - MERGED STEP --- */}
                 {step === 3 && (
-                    <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
+                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-blue-600">
+                        <h2 className="text-2xl font-bold mb-6 text-yellow-400">
                         3. Payment & Confirmation (भुगतान और पुष्टि)
                         </h2>
                         
                         {/* QR Code and Instructions (Bilingual) */}
-                        <p className="text-sm text-gray-700 mb-4 font-semibold">
+                        <p className="text-sm text-gray-200 mb-4 font-semibold">
                         भुगतान करने के लिए ऊपर दिए गए **QR कोड को स्कैन करें**।<br/>
                         *Scan the QR code above to complete the payment.*
                         </p>
@@ -525,27 +539,27 @@
                         <img 
                         src={QR_CODE_URL} 
                         alt="UPI QR Code for Payment" 
-                        className="mx-auto w-40 h-40 mb-6 border-4 border-blue-400 rounded-lg shadow-lg" 
-                        onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/cccccc/60a5fa?text=QR+Code+Error"; }}
+                        className="mx-auto w-40 h-40 mb-6 border-4 border-yellow-400 rounded-lg shadow-lg" 
+                        onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/ffffff/fcd34d?text=QR+Code+Error"; }}
                         />
                         
-                        {/* Payment Summary */}
-                        <div className="text-left border border-gray-200 p-4 rounded-xl bg-gray-50 mb-6 space-y-2">
-                        <p className="font-bold text-xl flex justify-between text-blue-600">
+                        {/* Payment Summary - Light theme inside dark card */}
+                        <div className="text-left border border-blue-700 p-4 rounded-xl bg-blue-900 mb-6 space-y-2 text-white">
+                        <p className="font-bold text-xl flex justify-between text-yellow-400">
                             <span>Total Amount Payable:</span> 
                             <span>₹1,199.00</span>
                         </p>
-                        <hr className="my-2 border-gray-300" />
+                        <hr className="my-2 border-blue-700" />
                         <p className="flex justify-between text-sm"><span>Plate & Sticker Cost (Base Price):</span> <span className="font-medium">₹997.00</span></p>
-                        <p className="flex justify-between text-sm text-green-700"><span>Taxes (GST 18%):</span> <span className="font-medium">₹180.00</span></p>
-                        <p className="flex justify-between text-sm text-red-700"><span>Service/Processing Fee:</span> <span className="font-medium">₹22.00</span></p>
+                        <p className="flex justify-between text-sm text-green-400"><span>Taxes (GST 18%):</span> <span className="font-medium">₹180.00</span></p>
+                        <p className="flex justify-between text-sm text-red-400"><span>Service/Processing Fee:</span> <span className="font-medium">₹22.00</span></p>
                         </div>
 
                         
-                        <div className="border-t border-gray-200 pt-6 mt-6 space-y-4 text-left">
+                        <div className="border-t border-blue-700 pt-6 mt-6 space-y-4 text-left">
                             {/* File Upload Instruction */}
-                            <div className="p-4 bg-yellow-100 border border-yellow-300 rounded-xl">
-                                <p className="text-sm font-medium text-yellow-800">
+                            <div className="p-4 bg-yellow-900/30 border border-yellow-600 rounded-xl">
+                                <p className="text-sm font-medium text-yellow-400">
                                     Payment proof is mandatory. Please upload the screenshot after making the payment.<br/>
                                     <span className='font-bold'>भुगतान के बाद स्क्रीनशॉट अपलोड करना अनिवार्य है।</span>
                                 </p>
@@ -567,6 +581,8 @@
                                 className="w-2/3 p-3" 
                                 onClick={handleConfirmUpload}
                                 disabled={!screenshotFile}
+                                colorClass={ACCENT_YELLOW} 
+                                textColorClass={ACCENT_TEXT}
                             >
                                 Upload Screenshot →
                             </Button>
@@ -577,31 +593,31 @@
 
                 {/* --- Step 5: Thank You Page --- */}
                 {step === 5 && (
-                    <Card className="w-full max-w-lg p-2 text-center bg-white custom-shadow border-t-8 border-green-600 animate-fadeIn">
+                    <Card className="w-full max-w-lg p-2 text-center custom-shadow border-t-8 border-yellow-400 animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
                     <CardContent>
                         {/* Success Icon (Inline SVG) */}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400 mx-auto mb-4">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-8.82"></path>
                         <path d="M9 11l3 3L22 4"></path>
                         </svg>
                         
-                        <h2 className="text-3xl font-bold text-green-700 mb-4">
+                        <h2 className="text-3xl font-bold text-yellow-400 mb-4">
                         Booking Confirmed! (बुकिंग की पुष्टि!)
                         </h2>
-                        <p className="text-lg text-gray-700 mb-6">
+                        <p className="text-lg text-gray-200 mb-6">
                         आपका HSRP बुकिंग सफलतापूर्वक संसाधित हो गया है। पेमेंट स्क्रीनशॉट प्राप्त हो गया है। 
-                        <span className="block mt-1 font-semibold text-gray-800">Your HSRP booking has been processed successfully. The payment screenshot has been received.</span>
+                        <span className="block mt-1 font-semibold text-white">Your HSRP booking has been processed successfully. The payment screenshot has been received.</span>
                         </p>
                         
-                        <div className="border border-green-200 bg-green-50 p-4 rounded-xl text-left space-y-2">
-                        <p className="font-semibold text-green-800">Order ID: <span className="font-mono bg-green-100 p-1 rounded">HSRP12003875X</span></p>
-                        <p className="text-sm text-gray-600">
+                        <div className="border border-yellow-600 bg-yellow-900/20 p-4 rounded-xl text-left space-y-2 text-white">
+                        <p className="font-semibold text-yellow-400">Order ID: <span className="font-mono bg-yellow-900/50 p-1 rounded">HSRP12003875X</span></p>
+                        <p className="text-sm text-gray-400">
                             ट्रैकिंग विवरण के साथ एक पुष्टि SMS और ईमेल शीघ्र ही भेजा जाएगा। आप होमपेज पर 'Track Your Order' विकल्प का उपयोग कर सकते हैं।
                             <span className="block mt-1">A confirmation SMS and email with tracking details will be sent shortly. You can use the 'Track Your Order' option on the homepage.</span>
                         </p>
                         </div>
 
-                        <p className="mt-4 text-sm text-gray-500">You can close this window now.</p>
+                        <p className="mt-4 text-sm text-gray-400">You can close this window now.</p>
 
                     </CardContent>
                     </Card>
@@ -609,9 +625,9 @@
 
                 {/* --- Step 6: Track Order --- */}
                 {step === 6 && (
-                    <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
+                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
                         Track Your Order (अपने ऑर्डर को ट्रैक करें)
                         </h2>
                         
@@ -624,34 +640,40 @@
                                 setTrackResult(null); 
                             }}
                         />
-                        <Button className="w-full p-3" onClick={handleTrackOrder}>
+                        <Button className="w-full p-3" onClick={handleTrackOrder} colorClass={ACCENT_YELLOW} textColorClass={ACCENT_TEXT}>
                             Track Status (स्थिति ट्रैक करें)
                         </Button>
                         </form>
 
                         {trackResult && (
-                        <div className={`mt-6 p-4 rounded-xl border-l-4 ${trackResult.status === 'Invalid' ? 'bg-red-50 border-red-500' : 'bg-green-50 border-green-500'}`}>
+                        <div className={`mt-6 p-4 rounded-xl border-l-4 ${trackResult.status === 'Invalid' ? 'bg-red-900/30 border-red-500 text-red-400' : 'bg-green-900/30 border-green-500 text-green-400'}`}>
                             {trackResult.status === 'Invalid' ? (
-                                <p className="font-semibold text-red-700">{trackResult.message}</p>
+                                <p className="font-semibold">{trackResult.message}</p>
                             ) : (
                                 <div className="space-y-2">
-                                    <p className="text-lg font-bold text-green-700">Status: {trackResult.status} (स्थिति)</p>
+                                    <p className="text-lg font-bold">Status: {trackResult.status} (स्थिति)</p>
                                     <p>Booking Date: <span className="font-medium">{trackResult.date}</span> (बुकिंग तिथि)</p>
                                     <p>Estimated Delivery: <span className="font-medium">{trackResult.eta}</span> (अनुमानित डिलीवरी)</p>
-                                    <p className="text-sm text-gray-600 mt-2">{trackResult.message}</p>
+                                    <p className="text-sm text-gray-400 mt-2">{trackResult.message}</p>
                                 </div>
                             )}
                         </div>
                         )}
                         
                         <div className="mt-6 flex justify-start">
-                        <Button variant="outline" className="w-1/3" onClick={() => setStep(0)}>
+                        <Button variant="outline" className="w-1/3" onClick={() => setStep(0)} colorClass="bg-transparent" textColorClass="text-white">
                             ← Home
                         </Button>
                         </div>
                     </CardContent>
                     </Card>
                 )}
+                
+                {/* Footer Placeholder (Standard light theme) */}
+                <footer className="w-full max-w-6xl mt-12 text-center text-gray-500 text-sm">
+                    <p>BOOK-MY-HSRP | All Rights Reserved 2024</p>
+                </footer>
+
 
                 </div>
             );

@@ -41,6 +41,8 @@
         const PRIMARY_TEXT = 'text-white'; 
         const ACCENT_YELLOW = 'bg-yellow-400'; // Bright Saffron/Yellow
         const ACCENT_TEXT = 'text-gray-800'; // Dark text for contrast on yellow
+        // --- NEW OFF-WHITE BACKGROUND COLOR ---
+        const CARD_BG_LIGHT = 'bg-gray-100'; // Off-white background for inner steps
 
         const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = PRIMARY_BLUE, textColorClass = 'text-white' }) => {
             let baseClasses = "rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 ";
@@ -78,15 +80,16 @@
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                // Standard input on dark card
-                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-yellow-400 focus:ring-yellow-400 focus:ring-1 transition-colors duration-200 uppercase-input bg-white text-gray-800 ${className}`}
+                // Standard input on light card background
+                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-800 focus:ring-blue-800 focus:ring-1 transition-colors duration-200 uppercase-input bg-white text-gray-800 ${className}`}
             />
         );
         
         const FileInput = ({ label, onChange, fileName }) => (
             <div className="space-y-2">
-                <label className="block text-sm font-medium text-white">{label}</label> {/* Changed text to white */}
-                <div className="relative border border-gray-300 bg-white rounded-xl p-3 cursor-pointer hover:border-yellow-400 transition-colors duration-200">
+                {/* Changed label text color back to dark for light background */}
+                <label className="block text-sm font-medium text-gray-700">{label}</label> 
+                <div className="relative border border-gray-300 bg-white rounded-xl p-3 cursor-pointer hover:border-blue-800 transition-colors duration-200">
                     <input
                         type="file"
                         className="absolute inset-0 opacity-0 cursor-pointer"
@@ -97,7 +100,8 @@
                         <span className="truncate">
                             {fileName || 'Click to upload screenshot...'}
                         </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400"> {/* Changed icon color to yellow */}
+                        {/* Changed icon color back to blue */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-800"> 
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -109,7 +113,7 @@
 
         const Select = ({ children, className = '', value, onChange, name }) => (
             <select 
-                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-yellow-400 focus:ring-yellow-400 focus:ring-1 transition-colors duration-200 appearance-none bg-white text-gray-800 ${className}`}
+                className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-blue-800 focus:ring-blue-800 focus:ring-1 transition-colors duration-200 appearance-none bg-white text-gray-800 ${className}`}
                 value={value}
                 onChange={onChange}
                 name={name} 
@@ -118,10 +122,9 @@
             </select>
         );
 
-        // Card component now uses bg-blue-800
+        // Card component made generic, caller handles background/text color
         const Card = ({ children, className = '' }) => (
-            // Added bg-blue-800 and text-white here
-            <div className={`rounded-xl shadow-xl ${PRIMARY_BLUE} ${PRIMARY_TEXT} overflow-hidden ${className}`}>
+            <div className={`rounded-xl shadow-xl overflow-hidden ${className}`}>
                 {children}
             </div>
         );
@@ -372,12 +375,13 @@
 
                         return (
                             <div key={i} className={`${item.className || ''}`}>
+                            {/* Card component only defines structure, color is passed via className */}
                             <Card 
-                                className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor}`}
+                                className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${cardBgColor} ${cardTextColor}`}
                             >
                             <CardContent className="flex flex-col justify-between h-full space-y-4">
                                 
-                                <div className={`space-y-3 mb-4 flex flex-col items-center ${cardTextColor}`}>
+                                <div className={`space-y-3 mb-4 flex flex-col items-center`}>
                                     {/* Icon - Simplified for light theme contrast */}
                                     <div
                                         className={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg ${isYellow ? PRIMARY_BLUE : ACCENT_YELLOW} ${isYellow ? PRIMARY_TEXT : ACCENT_TEXT}`}
@@ -413,9 +417,9 @@
 
                 {/* --- Step 1: Vehicle Info (1 of 3) --- */}
                 {step === 1 && (
-                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
+                    <Card className={`w-full max-w-lg p-2 custom-shadow animate-fadeIn ${CARD_BG_LIGHT} text-gray-800`}>
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">
                         1. Vehicle Information (वाहन जानकारी)
                         </h2>
                         <form className="space-y-4">
@@ -462,9 +466,9 @@
 
                 {/* --- Step 2: Personal Info (2 of 3) --- */}
                 {step === 2 && (
-                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
+                    <Card className={`w-full max-w-lg p-2 custom-shadow animate-fadeIn ${CARD_BG_LIGHT} text-gray-800`}>
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">
                         2. Owner Details (मालिक का विवरण)
                         </h2>
                         <form className="space-y-4">
@@ -506,6 +510,7 @@
                         </Select>
                         </form>
                         <div className="mt-6 flex justify-between gap-4">
+                        {/* Outline button remains Blue on light background */}
                         <Button variant="outline" className="w-1/3" onClick={handlePrev}>
                             ← Back
                         </Button>
@@ -524,14 +529,14 @@
 
                 {/* --- Step 3: Payment & Upload (3 of 3) - MERGED STEP --- */}
                 {step === 3 && (
-                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
+                    <Card className={`w-full max-w-lg p-2 custom-shadow animate-fadeIn ${CARD_BG_LIGHT} text-gray-800`}>
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-yellow-400">
+                        <h2 className="text-2xl font-bold mb-6 text-blue-800">
                         3. Payment & Confirmation (भुगतान और पुष्टि)
                         </h2>
                         
                         {/* QR Code and Instructions (Bilingual) */}
-                        <p className="text-sm text-gray-200 mb-4 font-semibold">
+                        <p className="text-sm text-gray-700 mb-4 font-semibold">
                         भुगतान करने के लिए ऊपर दिए गए **QR कोड को स्कैन करें**।<br/>
                         *Scan the QR code above to complete the payment.*
                         </p>
@@ -543,23 +548,23 @@
                         onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/ffffff/fcd34d?text=QR+Code+Error"; }}
                         />
                         
-                        {/* Payment Summary - Light theme inside dark card */}
-                        <div className="text-left border border-blue-700 p-4 rounded-xl bg-blue-900 mb-6 space-y-2 text-white">
-                        <p className="font-bold text-xl flex justify-between text-yellow-400">
+                        {/* Payment Summary - Back to Light theme contrast */}
+                        <div className="text-left border border-gray-300 p-4 rounded-xl bg-white mb-6 space-y-2 text-gray-800">
+                        <p className="font-bold text-xl flex justify-between text-blue-800">
                             <span>Total Amount Payable:</span> 
                             <span>₹1,199.00</span>
                         </p>
-                        <hr className="my-2 border-blue-700" />
+                        <hr className="my-2 border-gray-200" />
                         <p className="flex justify-between text-sm"><span>Plate & Sticker Cost (Base Price):</span> <span className="font-medium">₹997.00</span></p>
-                        <p className="flex justify-between text-sm text-green-400"><span>Taxes (GST 18%):</span> <span className="font-medium">₹180.00</span></p>
-                        <p className="flex justify-between text-sm text-red-400"><span>Service/Processing Fee:</span> <span className="font-medium">₹22.00</span></p>
+                        <p className="flex justify-between text-sm text-green-700"><span>Taxes (GST 18%):</span> <span className="font-medium">₹180.00</span></p>
+                        <p className="flex justify-between text-sm text-red-700"><span>Service/Processing Fee:</span> <span className="font-medium">₹22.00</span></p>
                         </div>
 
                         
-                        <div className="border-t border-blue-700 pt-6 mt-6 space-y-4 text-left">
+                        <div className="border-t border-gray-200 pt-6 mt-6 space-y-4 text-left">
                             {/* File Upload Instruction */}
-                            <div className="p-4 bg-yellow-900/30 border border-yellow-600 rounded-xl">
-                                <p className="text-sm font-medium text-yellow-400">
+                            <div className="p-4 bg-yellow-100 border border-yellow-300 rounded-xl">
+                                <p className="text-sm font-medium text-yellow-800">
                                     Payment proof is mandatory. Please upload the screenshot after making the payment.<br/>
                                     <span className='font-bold'>भुगतान के बाद स्क्रीनशॉट अपलोड करना अनिवार्य है।</span>
                                 </p>
@@ -593,31 +598,32 @@
 
                 {/* --- Step 5: Thank You Page --- */}
                 {step === 5 && (
-                    <Card className="w-full max-w-lg p-2 text-center custom-shadow border-t-8 border-yellow-400 animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
+                    <Card className={`w-full max-w-lg p-2 text-center custom-shadow border-t-8 border-blue-800 animate-fadeIn ${CARD_BG_LIGHT} text-gray-800`}>
                     <CardContent>
                         {/* Success Icon (Inline SVG) */}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400 mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-800 mx-auto mb-4">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-8.82"></path>
                         <path d="M9 11l3 3L22 4"></path>
                         </svg>
                         
-                        <h2 className="text-3xl font-bold text-yellow-400 mb-4">
+                        <h2 className="text-3xl font-bold text-blue-800 mb-4">
                         Booking Confirmed! (बुकिंग की पुष्टि!)
                         </h2>
-                        <p className="text-lg text-gray-200 mb-6">
+                        <p className="text-lg text-gray-700 mb-6">
                         आपका HSRP बुकिंग सफलतापूर्वक संसाधित हो गया है। पेमेंट स्क्रीनशॉट प्राप्त हो गया है। 
-                        <span className="block mt-1 font-semibold text-white">Your HSRP booking has been processed successfully. The payment screenshot has been received.</span>
+                        <span className="block mt-1 font-semibold text-gray-800">Your HSRP booking has been processed successfully. The payment screenshot has been received.</span>
                         </p>
                         
-                        <div className="border border-yellow-600 bg-yellow-900/20 p-4 rounded-xl text-left space-y-2 text-white">
-                        <p className="font-semibold text-yellow-400">Order ID: <span className="font-mono bg-yellow-900/50 p-1 rounded">HSRP12003875X</span></p>
-                        <p className="text-sm text-gray-400">
+                        {/* Confirmation Box is light yellow on the off-white card */}
+                        <div className="border border-yellow-300 bg-yellow-50 p-4 rounded-xl text-left space-y-2 text-gray-700">
+                        <p className="font-semibold text-yellow-800">Order ID: <span className="font-mono bg-yellow-200 p-1 rounded">HSRP12003875X</span></p>
+                        <p className="text-sm text-gray-600">
                             ट्रैकिंग विवरण के साथ एक पुष्टि SMS और ईमेल शीघ्र ही भेजा जाएगा। आप होमपेज पर 'Track Your Order' विकल्प का उपयोग कर सकते हैं।
                             <span className="block mt-1">A confirmation SMS and email with tracking details will be sent shortly. You can use the 'Track Your Order' option on the homepage.</span>
                         </p>
                         </div>
 
-                        <p className="mt-4 text-sm text-gray-400">You can close this window now.</p>
+                        <p className="mt-4 text-sm text-gray-500">You can close this window now.</p>
 
                     </CardContent>
                     </Card>
@@ -625,9 +631,9 @@
 
                 {/* --- Step 6: Track Order --- */}
                 {step === 6 && (
-                    <Card className="w-full max-w-lg p-2 custom-shadow animate-fadeIn"> {/* bg-blue-800 is applied via Card component */}
+                    <Card className={`w-full max-w-lg p-2 custom-shadow animate-fadeIn ${CARD_BG_LIGHT} text-gray-800`}>
                     <CardContent>
-                        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">
                         Track Your Order (अपने ऑर्डर को ट्रैक करें)
                         </h2>
                         
@@ -646,7 +652,7 @@
                         </form>
 
                         {trackResult && (
-                        <div className={`mt-6 p-4 rounded-xl border-l-4 ${trackResult.status === 'Invalid' ? 'bg-red-900/30 border-red-500 text-red-400' : 'bg-green-900/30 border-green-500 text-green-400'}`}>
+                        <div className={`mt-6 p-4 rounded-xl border-l-4 ${trackResult.status === 'Invalid' ? 'bg-red-50 border-red-500 text-red-700' : 'bg-green-50 border-green-500 text-green-700'}`}>
                             {trackResult.status === 'Invalid' ? (
                                 <p className="font-semibold">{trackResult.message}</p>
                             ) : (
@@ -654,14 +660,15 @@
                                     <p className="text-lg font-bold">Status: {trackResult.status} (स्थिति)</p>
                                     <p>Booking Date: <span className="font-medium">{trackResult.date}</span> (बुकिंग तिथि)</p>
                                     <p>Estimated Delivery: <span className="font-medium">{trackResult.eta}</span> (अनुमानित डिलीवरी)</p>
-                                    <p className="text-sm text-gray-400 mt-2">{trackResult.message}</p>
+                                    <p className="text-sm text-gray-600 mt-2">{trackResult.message}</p>
                                 </div>
                             )}
                         </div>
                         )}
                         
                         <div className="mt-6 flex justify-start">
-                        <Button variant="outline" className="w-1/3" onClick={() => setStep(0)} colorClass="bg-transparent" textColorClass="text-white">
+                        {/* Outline button remains Blue on light background */}
+                        <Button variant="outline" className="w-1/3" onClick={() => setStep(0)}>
                             ← Home
                         </Button>
                         </div>

@@ -29,22 +29,23 @@
 
         const { useState } = React;
 
-        const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = 'bg-[#0a3d62]' }) => {
-            // Determine hover and focus ring color from the main button color
-            const baseColor = colorClass.replace('bg-', '');
-            
+        const Button = ({ children, onClick, className = '', variant = 'default', disabled = false, colorClass = 'bg-[#0a3d62]', textColorClass = 'text-white' }) => {
+            // NOTE: The button color and text color are now manually controlled in the parent component (App) for the cards 
+            // to achieve the required high-contrast, inverted theme (e.g., Blue card has Saffron button).
             let baseClasses = "rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 ";
             
             if (variant === 'outline') {
                 baseClasses += "bg-white text-[#0a3d62] border border-[#0a3d62] hover:bg-[#e0f7fa] focus:ring-[#0a3d62]";
-            } else { // default
-                // Use a darker shade for hover if possible, otherwise use the base color
-                let hoverClass = colorClass;
-                if (baseColor === '[#0a3d62]') hoverClass = 'hover:bg-[#062e49]'; 
-                else if (baseColor === '[#FF9933]') hoverClass = 'hover:bg-[#e07b1a]';
-                else hoverClass = `hover:opacity-90`;
-
-                baseClasses += `${colorClass} ${hoverClass} text-white focus:ring-${baseColor}`;
+            } else { 
+                // Default style uses passed colorClass and textColorClass
+                baseClasses += `${colorClass} hover:opacity-90 ${textColorClass} focus:ring-opacity-75 focus:ring-2 focus:ring-offset-2`;
+                
+                // Add specific hover effects manually for the dark blue and saffron buttons
+                if (colorClass.includes('[#0a3d62]')) { // If button is Dark Blue
+                    baseClasses += ' hover:bg-[#062e49] focus:ring-[#0a3d62]';
+                } else if (colorClass.includes('[#FF9933]')) { // If button is Saffron
+                    baseClasses += ' hover:bg-[#e07b1a] focus:ring-[#FF9933]';
+                }
             }
 
             return (
@@ -58,10 +59,11 @@
             );
         };
 
+
         const Input = ({ placeholder, className = '', type = 'text', value, onChange, name }) => (
             <input
                 type={type}
-                name={name} // Added name prop for state management
+                name={name} 
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
@@ -98,7 +100,7 @@
                 className={`w-full border border-gray-300 p-3 rounded-xl shadow-sm focus:border-[#0a3d62] focus:ring-[#0a3d62] focus:ring-1 transition-colors duration-200 appearance-none ${className}`}
                 value={value}
                 onChange={onChange}
-                name={name} // Added name prop for state management
+                name={name} 
             >
                 {children}
             </select>
@@ -116,7 +118,7 @@
             </div>
         );
 
-        // --- Data Definitions (Updated to match screenshot aesthetic) ---
+        // --- Data Definitions (Updated to match the user's uploaded image) ---
 
         const INDIAN_STATES_AND_UTS = [
             "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
@@ -129,65 +131,64 @@
             "Lakshadweep", "Delhi", "Puducherry"
         ];
         
-        // UPDATED HSRP_OPTIONS with distinct colors and slightly refined titles
+        // HSRP_OPTIONS: Structured and colored exactly as per the user's image layout.
         const HSRP_OPTIONS = [
-            // 1. Primary Option (Dark Blue/Teal look from screenshot)
+            // 1. HSRP with Colour Sticker (Saffron/Yellow, Large Card: spans 2 rows)
             { 
-                title: 'New High Security Plate & Colour Sticker', 
+                title: 'HSRP with Colour Sticker', 
                 description: 'Apply for fresh HSRP and mandatory sticker for all vehicle types.',
-                icon: (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                ),
-                action: 'Start Booking →',
-                color: 'bg-[#0a3d62]' // Dark Blue
+                action: 'Book →', 
+                color: 'bg-[#FF9933]', // Saffron/Orange
+                className: 'lg:row-span-2 lg:h-full', // For the big card effect (in a 2x3 grid)
+                navAction: 'booking'
             },
-            // 2. Track Order (Saffron/Orange - highly prominent)
+            // 2. Replacement/Transfer (Dark Blue) - Top Right Grid, Row 1, Col 1
             { 
-                title: 'Track Your Order', 
-                description: 'Check the current status of your existing HSRP application.', 
-                action: 'Track Status →', 
-                color: 'bg-[#FF9933]' // Saffron/Orange
-            },
-            // 3. Only Colour Sticker (Light Blue/Indigo)
-            { 
-                title: 'Only Colour Sticker', 
-                description: 'Apply only for the mandatory colour-coded fuel sticker.', 
-                action: 'Book Sticker →', 
-                color: 'bg-indigo-600'
-            },
-            // 4. Reschedule/Cancel Appointment (Action/Red-Green Mix)
-            { 
-                title: 'Reschedule/Cancel Appointment', 
-                description: 'Modify or cancel a confirmed fitment appointment.', 
-                action: 'Manage Appointment →', 
-                color: 'bg-teal-600' // Teal
-            },
-            // 5. Replacement/Transfer (Gray/Utility)
-            { 
-                title: 'Plate Replacement / Transfer', 
+                title: 'Replacement/Retain/Transfer', 
                 description: 'Book plates for damaged or transfer cases.', 
                 action: 'Book →', 
-                color: 'bg-stone-500' // Stone Gray
+                color: 'bg-[#0a3d62]', // Dark Blue
+                navAction: 'booking'
             },
-            // 6. EV Plate (Green)
+            // 3. Plate for Electric Vehicle (Dark Blue) - Top Right Grid, Row 1, Col 2
             { 
                 title: 'Plate for Electric Vehicle', 
                 description: 'Book the unique green plate for electric vehicles.', 
                 action: 'Book EV Plate →', 
-                color: 'bg-green-600' // Green
+                color: 'bg-[#0a3d62]', // Dark Blue
+                navAction: 'booking'
             }, 
-            // 7. Grievance Redressal (Placeholder/Soft Color)
+            // 4. Track Your Order (Dark Blue) - Top Right Grid, Row 1, Col 3
             { 
-                title: 'Grievance Redressal / Query', 
+                title: 'Track Your Order', 
+                description: 'Check the current status of your existing HSRP application.', 
+                action: 'Track →', 
+                color: 'bg-[#0a3d62]', // Dark Blue
+                navAction: 'tracking' // Flag to handle navigation
+            },
+            // 5. Only Colour Sticker (Saffron/Yellow) - Middle Right Grid, Row 2, Col 1
+            { 
+                title: 'Only Colour Sticker', 
+                description: 'Apply only for the mandatory colour-coded fuel sticker.', 
+                action: 'Book →', 
+                color: 'bg-[#FF9933]', // Saffron/Orange
+                navAction: 'booking'
+            },
+            // 6. Plate for Tractor & Trailer (Dark Blue) - **NEW CARD** - Middle Right Grid, Row 2, Col 2
+            { 
+                title: 'Plate for Tractor & Trailer', 
+                description: 'Apply for HSRP for Tractor or Trailer vehicles.', 
+                action: 'Book →', 
+                color: 'bg-[#0a3d62]', // Dark Blue
+                navAction: 'booking'
+            },
+            // 7. Grievance Redressal (Saffron/Yellow) - Middle Right Grid, Row 2, Col 3
+            { 
+                title: 'Grievance Redressal', 
                 description: 'Submit an enquiry or file a complaint regarding an order.', 
                 action: 'Enquiry →', 
-                color: 'bg-purple-500' // Purple
+                color: 'bg-[#FF9933]', // Saffron/Orange
+                navAction: 'booking' // Assuming it leads to a form page similar to booking
             }
         ];
 
@@ -217,22 +218,21 @@
 
 
         function App() {
-            const [step, setStep] = useState(0);
+            const [step, setStep] = useState(0); 
             const [trackingId, setTrackingId] = useState('');
             const [trackResult, setTrackResult] = useState(null);
             const [screenshotFile, setScreenshotFile] = useState(null); 
             
-            // State for all form data 
             const [formData, setFormData] = useState({
-                regNo: '',
-                chassisNo: '',
-                engineNo: '',
-                vehicleType: '',
-                fullName: '',
-                contactNo: '',
-                email: '',
-                address: '',
-                state: '',
+                regNo: 'DL04CA9999',
+                chassisNo: 'A1B2C',
+                engineNo: 'X9Y8Z',
+                vehicleType: 'four_wheeler',
+                fullName: 'विक्रम सिंह',
+                contactNo: '9876543210',
+                email: 'vikram.singh@example.com',
+                address: '101, सेक्टर 14, गुरुग्राम, हरियाणा',
+                state: 'Delhi',
             });
 
             // Universal handler for updating form data 
@@ -245,12 +245,10 @@
             const handlePrev = () => setStep(step - 1);
 
             // Updated logic based on the new HSRP_OPTIONS array structure
-            const handleOptionClick = (index) => {
-                // Index 1 (Track Your Order) goes to Step 6
-                if (index === 1) { 
+            const handleOptionClick = (item) => {
+                if (item.navAction === 'tracking') { 
                     setStep(6);
                 } else {
-                    // All other options go to Step 1 (Booking Flow)
                     setStep(1);
                     setScreenshotFile(null);
                 }
@@ -276,8 +274,7 @@
                 if (screenshotFile) {
                     setStep(5);
                 } else {
-                    console.error("Please upload a payment screenshot.");
-                    // In a real app, you would show a red error message next to the file input
+                    console.error("कृपया भुगतान का स्क्रीनशॉट अपलोड करें। (Please upload a payment screenshot.)");
                 }
             };
 
@@ -309,11 +306,11 @@
                         Home
                         </li>
                         {/* About (Placeholder) */}
-                        <li className="p-3 cursor-pointer nav-link" onClick={() => { /* In a real app, this would route */ }}>
+                        <li className="p-3 cursor-pointer nav-link">
                         Corporate Profile
                         </li>
                         {/* Contact (Placeholder) */}
-                        <li className="p-3 cursor-pointer nav-link" onClick={() => { /* In a real app, this would route */ }}>
+                        <li className="p-3 cursor-pointer nav-link">
                         Contact Us
                         </li>
                         {/* Track Order - Highlighted in Saffron */}
@@ -328,7 +325,6 @@
                 {(step >= 1 && step <= 3) && ( 
                     <div className="w-full max-w-lg mb-6">
                     <div className="text-sm font-medium text-gray-600 mb-1 flex justify-between">
-                        {/* Progress calculation updated to reflect the 3 steps */}
                         <span>Step {step} of 3</span> 
                         <span>{Math.round((step / 3) * 100)}% Complete</span>
                     </div>
@@ -341,58 +337,53 @@
                     </div>
                 )}
 
-                {/* --- Step 0: Homepage/Options --- */}
+                {/* --- Step 0: Homepage/Options (Layout matches user's image) --- */}
                 {step === 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl animate-fadeIn">
-                    {HSRP_OPTIONS.map((item, i) => (
-                        <Card 
-                            key={i} 
-                            // Use a uniform style but with different accent colors for the button
-                            className={`text-center bg-white custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 border-t-8 border-transparent`}
-                        >
-                        <CardContent className="flex flex-col justify-between h-full space-y-4">
-                            
-                            <div className="space-y-3 mb-4">
-                                {/* Icon Circle Color (Primary card gets white background for contrast) */}
-                                <div className
-                                    ={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg 
-                                    ${i === 0 ? 'bg-white border-4 border-[#0a3d62]' : item.color.replace('bg-', 'bg-')}
-                                    ${i === 0 ? 'text-[#0a3d62]' : 'text-white'}`}
-                                >
-                                    {/* Re-rendering the icon with the correct color based on circle background */}
-                                    {i === 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl animate-fadeIn">
+                    {HSRP_OPTIONS.map((item, i) => {
+                        const isSaffron = item.color === 'bg-[#FF9933]';
+                        const cardTextColor = isSaffron ? 'text-[#0a3d62]' : 'text-white';
+                        const buttonBgColor = isSaffron ? 'bg-[#0a3d62] hover:bg-[#062e49]' : 'bg-[#FF9933] hover:bg-[#e07b1a]';
+                        const buttonTextColor = isSaffron ? 'text-white' : 'text-[#0a3d62]';
+                        const iconBgColor = isSaffron ? 'bg-[#0a3d62] text-white' : 'bg-[#FF9933] text-[#0a3d62]';
+
+                        return (
+                            <Card 
+                                key={i} 
+                                // Apply color and dynamic row/col span for the large card (index 0)
+                                className={`text-center custom-shadow hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300 ${item.color} ${item.className || ''}`}
+                            >
+                            <CardContent className="flex flex-col justify-between h-full space-y-4">
+                                
+                                <div className={`space-y-3 mb-4 flex flex-col items-center ${cardTextColor}`}>
+                                    {/* Icon Circle: Inverted color for contrast */}
+                                    <div
+                                        className={`inline-flex items-center justify-center p-3 rounded-full mx-auto shadow-lg ${iconBgColor}`}
+                                    >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                            <polyline points="14 2 14 8 20 8"></polyline>
-                                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                                            <polyline points="10 9 9 9 8 9"></polyline>
-                                        </svg>
-                                    ) : (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            {/* Generic Icon - Placeholder for non-primary options */}
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" y1="8" x2="12" y2="12"></line>
                                             <line x1="12" y1="16" x2="12" y2="16"></line>
                                         </svg>
-                                    )}
+                                    </div>
+                                    <h2 className="text-xl font-bold leading-snug">
+                                        {item.title}
+                                    </h2 >
+                                    <p className="text-sm font-medium opacity-80">{item.description}</p>
                                 </div>
-                                <h2 className="text-xl font-bold text-[#1e272e] leading-snug">
-                                    {item.title}
-                                </h2>
-                                <p className="text-sm text-gray-500 font-medium">{item.description}</p>
-                            </div>
-                            
-                            <Button 
-                                className={`w-full p-3 text-lg tracking-wider font-semibold`} 
-                                colorClass={item.color}
-                                onClick={() => handleOptionClick(i)}
-                            >
-                                {item.action}
-                            </Button>
-                        </CardContent>
-                        </Card>
-                    ))}
+                                
+                                <Button 
+                                    className={`w-full p-3 text-lg tracking-wider font-semibold ${buttonBgColor} ${buttonTextColor}`}
+                                    onClick={() => handleOptionClick(item)} 
+                                    colorClass={buttonBgColor.split(' ')[0]} // Pass only the bg- class for internal Button component logic
+                                    textColorClass={buttonTextColor} // Pass the text color
+                                >
+                                    {item.action}
+                                </Button>
+                            </CardContent>
+                            </Card>
+                        );
+                    })}
                     </div>
                 )}
 
@@ -489,7 +480,6 @@
                                 <option key={state} value={state}>{state}</option>
                             ))}
                         </Select>
-                        {/* Pincode Input REMOVED as requested */}
                         </form>
                         <div className="mt-6 flex justify-between gap-4">
                         <Button variant="outline" className="w-1/3" onClick={handlePrev}>
@@ -506,7 +496,7 @@
                 {/* --- Step 3: Payment & Upload (3 of 3) - MERGED STEP --- */}
                 {step === 3 && (
                     <Card className="w-full max-w-lg p-2 bg-white/95 backdrop-blur custom-shadow animate-fadeIn">
-                    <CardContent className="text-center">
+                    <CardContent>
                         <h2 className="text-2xl font-bold mb-6 text-[#0a3d62]">
                         3. Payment & Confirmation (भुगतान और पुष्टि)
                         </h2>
@@ -596,7 +586,6 @@
                         </p>
                         </div>
 
-                        {/* Return to Home button removed as requested */}
                         <p className="mt-4 text-sm text-gray-500">You can close this window now.</p>
 
                     </CardContent>
@@ -661,5 +650,3 @@
     </script>
 </body>
 </html>
-
-
